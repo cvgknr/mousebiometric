@@ -1,31 +1,34 @@
 package edu.pace.biometric.mouse.features;
 
+import java.util.List;
 import java.util.Vector;
 
 import edu.pace.biometric.mouse.MouseLogParser;
 import edu.pace.biometric.mouse.MouseMove;
+/**
+ * 
+ * @author Venugopala C
+ *
+ */
 
-public class MouseMoveCurveLength implements MouseFeature{
-	private final MouseLogParser mouseParser;
-	private final String appName;
-	
+public class MouseMoveCurveLength extends MouseFeature{
 	public MouseMoveCurveLength(MouseLogParser parser, String app){
-		this.mouseParser = parser;
-		this.appName = app;
+		super(parser, app);
 	}
-	public String extract(){
-		Vector<MouseMove> moves = mouseParser.getMouseMoves(appName);
+	public FeatureResult extract(){
+		List<MouseMove> moves = mouseParser.getMouseMoves(appName);
 		MouseMove _pt = null;
 		double sum = 0;
 		long x, y;
 		for (MouseMove mouseMove : moves) {
 			if (null != _pt){
-				x = mouseMove.xpix - _pt.xpix;
-				y = mouseMove.ypix - _pt.ypix;
+				x = mouseMove.getXpix() - _pt.getXpix();
+				y = mouseMove.getYpix() - _pt.getYpix();
 				sum += Math.sqrt((double)(x * x + y * y));
 			}
 			_pt = mouseMove;
 		}
-		return ""+sum;
+		//return ""+sum;
+		return new FeatureResult(getClass().getName(), "Mouse Move Curve Length", ""+sum, "Pixels");
 	}
 }

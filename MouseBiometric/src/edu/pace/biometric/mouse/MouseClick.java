@@ -2,6 +2,11 @@ package edu.pace.biometric.mouse;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+/**
+ * 
+ * @author Venugopala C
+ *
+ */
 
 public class MouseClick {
 	/*
@@ -17,15 +22,19 @@ public class MouseClick {
 	 * </mouseClick>
 	 */
 	
-	public int id;
-	public int xpix;
-	public int ypix;
-	public int button;
-	public String mousepresstime;
-	public String mousereleasetime;
-	public int mouseduration;
-	public String window;
-	public String context;
+	private int id;
+	private int xpix;
+	private int ypix;
+	private String button;
+	private String mousepresstime;
+	private String mousereleasetime;
+	private int mouseduration;
+	private String window;
+	private String context;
+	public MouseClick(Node n){
+		parse(n);
+	}
+
 	public void parse(Node n){
 		if (null != n){
 			NodeList _list = n.getChildNodes();
@@ -41,7 +50,7 @@ public class MouseClick {
 				else if ("ypix".equals(name))
 					ypix = Integer.parseInt(value);
 				else if ("button".equals(name))
-					button = Integer.parseInt(value);
+					button = value;
 				else if ("mousepresstime".equals(name))
 					mousepresstime = value;
 				else if ("mousereleasetime".equals(name))
@@ -67,5 +76,41 @@ public class MouseClick {
 		System.out.println("window: " + window);
 		System.out.println("context: " + context);
 		System.out.println("--------------------------------------------");
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public int getXpix() {
+		return xpix;
+	}
+
+	public int getYpix() {
+		return ypix;
+	}
+
+	public String getButton() {
+		return button;
+	}
+
+	public String getMousepresstime() {
+		return mousepresstime;
+	}
+
+	public String getMousereleasetime() {
+		return mousereleasetime;
+	}
+
+	public int getMouseduration() {
+		return mouseduration;
+	}
+
+	public String getWindow() {
+		return window;
+	}
+
+	public String getContext() {
+		return context;
 	}
 }

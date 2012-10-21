@@ -2,6 +2,11 @@ package edu.pace.biometric.mouse;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+/**
+ * 
+ * @author Venugopala C
+ *
+ */
 
 public class MousePointer {
 	/*
@@ -20,18 +25,21 @@ public class MousePointer {
 	 * </mousePointer>
 	 */
 	
-	public int id;
-	public int xpix;
-	public int ypix;
-	public int xfinalpix;
-	public int yfinalpix;
-	public float distancepix;
-	public float lengthpix;
-	public String starttime;
-	public String endtime;
-	public int duration;
-	public String window;
-	public String context;
+	private int id;
+	private int xpix;
+	private int ypix;
+	private int xfinalpix;
+	private int yfinalpix;
+	private float distancepix;
+	private float lengthpix;
+	private String starttime;
+	private String endtime;
+	private int duration;
+	private String window;
+	private String context;
+	public MousePointer(Node n){
+		parse(n);
+	}
 	public void parse(Node n){
 		if (null != n){
 			NodeList _list = n.getChildNodes();
@@ -83,5 +91,41 @@ public class MousePointer {
 		System.out.println("window: " + window);
 		System.out.println("context: " + context);
 		System.out.println("--------------------------------------------");
+	}
+	public int getId() {
+		return id;
+	}
+	public int getXpix() {
+		return xpix;
+	}
+	public int getYpix() {
+		return ypix;
+	}
+	public int getXfinalpix() {
+		return xfinalpix;
+	}
+	public int getYfinalpix() {
+		return yfinalpix;
+	}
+	public float getDistancepix() {
+		return distancepix;
+	}
+	public float getLengthpix() {
+		return lengthpix;
+	}
+	public String getStarttime() {
+		return starttime;
+	}
+	public String getEndtime() {
+		return endtime;
+	}
+	public int getDuration() {
+		return duration;
+	}
+	public String getWindow() {
+		return window;
+	}
+	public String getContext() {
+		return context;
 	}
 }

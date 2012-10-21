@@ -2,6 +2,11 @@ package edu.pace.biometric.mouse;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+/**
+ * 
+ * @author Venugopala C
+ *
+ */
 
 public class MouseMove {
 	/*
@@ -15,13 +20,16 @@ public class MouseMove {
 	 * </mouseMove>
 	 */
 	
-	public int id;
-	public int xpix;
-	public int ypix;
-	public int wheel;
-	public String starttime;
-	public String window;
-	public String context;
+	private int id;
+	private int xpix;
+	private int ypix;
+	private int wheel;
+	private String starttime;
+	private String window;
+	private String context;
+	public MouseMove(Node n){
+		parse(n);
+	}
 	public void parse(Node n){
 		if (null != n){
 			NodeList _list = n.getChildNodes();
@@ -60,5 +68,26 @@ public class MouseMove {
 		
 		
 		System.out.println("--------------------------------------------");
+	}
+	public int getId() {
+		return id;
+	}
+	public int getXpix() {
+		return xpix;
+	}
+	public int getYpix() {
+		return ypix;
+	}
+	public int getWheel() {
+		return wheel;
+	}
+	public String getStarttime() {
+		return starttime;
+	}
+	public String getWindow() {
+		return window;
+	}
+	public String getContext() {
+		return context;
 	}
 }

@@ -1,20 +1,21 @@
 package edu.pace.biometric.mouse.features;
 
+import java.util.List;
 import java.util.Vector;
 
 import edu.pace.biometric.mouse.MouseLogParser;
 import edu.pace.biometric.mouse.MouseMove;
-
-public class MouseMoveAverageSpeed implements MouseFeature{
-	private final MouseLogParser mouseParser;
-	private final String appName;
-	
+/**
+ * 
+ * @author Venugopala C
+ *
+ */
+public class MouseMoveAverageSpeed extends MouseFeature{
 	public MouseMoveAverageSpeed(MouseLogParser parser, String app){
-		this.mouseParser = parser;
-		this.appName = app;
+		super(parser, app);
 	}
-	public String extract(){
-		Vector<MouseMove> moves = mouseParser.getMouseMoves(appName);
+	public FeatureResult extract(){
+		List<MouseMove> moves = mouseParser.getMouseMoves(appName);
 		MouseMove _pt = null;
 		double sum = 0;
 		long x, y;
@@ -22,14 +23,16 @@ public class MouseMoveAverageSpeed implements MouseFeature{
 		long time;
 		for (MouseMove mouseMove : moves) {
 			if (null != _pt){
-				x = mouseMove.xpix - _pt.xpix;
-				y = mouseMove.ypix - _pt.ypix;
+				x = mouseMove.getXpix() - _pt.getXpix();
+				y = mouseMove.getYpix() - _pt.getYpix();
 				sqrt = Math.sqrt((double)(x * x + y * y));
-				time = Long.parseLong(mouseMove.starttime) - Long.parseLong(_pt.starttime);
+				time = Long.parseLong(mouseMove.getStarttime()) - Long.parseLong(_pt.getStarttime());
 				sum = sum + (sqrt / (double)time);
 			}
 			_pt = mouseMove;
 		}
-		return sum+"";
+		//return sum+"";
+		//TODO
+		return new FeatureResult(getClass().getName(), "Average Mouse Movement Speed", ""+sum, "Milli Seconds");
 	}
 }
