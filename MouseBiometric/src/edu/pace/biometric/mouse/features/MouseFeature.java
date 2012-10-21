@@ -15,5 +15,5 @@ public abstract class MouseFeature {
 		this.mouseParser = parser;
 		this.appName = app;
 	}
-	public abstract FeatureResult extract();
+	public abstract FeatureResult[] extract();
 }

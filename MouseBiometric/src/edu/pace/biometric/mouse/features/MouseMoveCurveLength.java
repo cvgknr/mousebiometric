@@ -28,7 +28,6 @@ public class MouseMoveCurveLength extends MouseFeature{
 			}
 			_pt = mouseMove;
 		}
-		//return ""+sum;
 		return new FeatureResult(getClass().getName(), "Mouse Move Curve Length", ""+sum, "Pixels");
 	}
 }
