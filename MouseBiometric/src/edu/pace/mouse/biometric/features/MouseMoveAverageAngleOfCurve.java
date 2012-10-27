@@ -10,25 +10,30 @@ import edu.pace.mouse.biometric.util.Util;
 
 
 public class MouseMoveAverageAngleOfCurve implements Feature{
-	private MouseLogParser parser;
 	private ArrayList<MouseMove> moves;
 	public MouseMoveAverageAngleOfCurve(MouseLogParser _Parser){
-		parser = _Parser;
-		moves = parser.getMouseMoves();
+		moves = _Parser.getMouseMoves();
 	}
 	public FeatureResult[] extract(){
 		MouseMove _pt = null;
-		double sum = 0;
-		//TODO
-		/*long x, y;
+		double sum = 0, min = 0, max = 0, angle;
+		long x, y;
 		for (MouseMove mouseMove : moves) {
 			if (null != _pt){
 				x = mouseMove.getXpix() - _pt.getXpix();
 				y = mouseMove.getYpix() - _pt.getYpix();
-				sum += Math.sqrt((double)(x * x + y * y));
+				angle = Math.toDegrees(Math.atan2(x,y));
+				sum += angle;
+				if (angle < min)
+					min = angle;
+				if (angle > max)
+					max = angle;
 			}
 			_pt = mouseMove;
-		}*/
-		return new FeatureResult[]{new FeatureResult(getClass().getName(), "Mouse Move Curve Size", Util.format(sum), "px")};
+		}
+		double average = sum/moves.size();
+		return new FeatureResult[]{new FeatureResult(getClass().getName(), "Average Angle of Mouse Move Curve ", Util.format(average), "degree"),
+				new FeatureResult(getClass().getName(), "Minimum Angle of Mouse Move Curve ", Util.format(min), "degree"),
+				new FeatureResult(getClass().getName(), "Maximum Angle of Mouse Move Curve ", Util.format(max), "degree")};
 	}
 }
