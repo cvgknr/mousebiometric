@@ -128,4 +128,8 @@ public class MousePointer {
 	public String getContext() {
 		return context;
 	}
+	public double getSlope(){
+		return (yfinalpix-ypix)/(xfinalpix-xpix);
+	}
+
 }

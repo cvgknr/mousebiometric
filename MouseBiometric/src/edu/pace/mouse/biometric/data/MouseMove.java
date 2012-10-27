@@ -24,7 +24,7 @@ public class MouseMove {
 	private int xpix;
 	private int ypix;
 	private int wheel;
-	private String starttime;
+	private long starttime;
 	private String window;
 	private String context;
 	public MouseMove(Node n){
@@ -47,7 +47,7 @@ public class MouseMove {
 				else if ("wheel".equals(name))
 					wheel = Integer.parseInt(value);
 				else if ("starttime".equals(name))
-					starttime = value;
+					starttime = Long.parseLong(value);
 				else if ("window".equals(name))
 					window = value;
 				else if ("context".equals(name))
@@ -81,7 +81,7 @@ public class MouseMove {
 	public int getWheel() {
 		return wheel;
 	}
-	public String getStarttime() {
+	public long getStarttime() {
 		return starttime;
 	}
 	public String getWindow() {
