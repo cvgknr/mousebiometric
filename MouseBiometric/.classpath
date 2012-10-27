@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="test/src"/>
 	<classpathentry kind="lib" path="lib/reflections-0.9.8-uberjar.jar"/>
 	<classpathentry kind="lib" path="lib/reflections-0.9.8.jar"/>
 	<classpathentry kind="lib" path="lib/guava-11.0.2.jar"/>
