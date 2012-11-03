@@ -22,7 +22,7 @@ def printMouseMoves(L):
       xpix = node3.getElementsByTagName('xpix').item(0).childNodes[0].data
       ypix = node3.getElementsByTagName('ypix').item(0).childNodes[0].data
       wheel = node3.getElementsByTagName('wheel').item(0).childNodes[0].data
-      window = node3.getElementsByTagName('window').item(0).childNodes[0].data
+      window = ""#node3.getElementsByTagName('window').item(0).childNodes[0].data
       if None !=_time:
         duration = int(time) - int(_time)
       _time = time
@@ -51,7 +51,7 @@ def printPix(_List):
     print( str(x['starttime']) + '  ' + str(x['xpix'])+ '  ' + str(x['ypix']) + '  ' + str(x['duration']))
     
 def drawPix(_List):
-  win = GraphWin("Sample", 1200, 500)
+  win = GraphWin("Sample", 2000, 1500)
   pt = None
   for x in _List:
     if None != pt:
@@ -100,20 +100,22 @@ def averageSpeed(_List):
   return sum/len(_List)
 
     
-doc = xml.dom.minidom.parse("NedBakelman_WordProcessor_001.xml")
+#doc = xml.dom.minidom.parse("NedBakelman_WordProcessor_001.xml")
+doc = xml.dom.minidom.parse("../../logsamples/VenugopalaChannarayappa_Browser_001.xml")
 for node in doc.getElementsByTagName("biometrics-data"):
   L = node.getElementsByTagName("mouseMoves")
   _l = printMouseMoves(L)
   print (_l)
   _apps = listApps(_l)
   doc = getAppMouseMove('Document1 - Microsoft Word', _l)
+  #doc = getAppMouseMove(, _l)
   sizeOfCurve = len(doc)
-  print ("Size of curve: " + str(sizeOfCurve))
+  '''print ("Size of curve: " + str(sizeOfCurve))
   print('Curve Length : ' + str(curveLength(doc)))
   print('Total Time : ' + str(totalTime(doc)))
-  print('Average Speed : ' + str(averageSpeed(doc)))
+  print('Average Speed : ' + str(averageSpeed(doc)))'''
   ##uncomment the below line to see the trajectory in Graphics 
-  #drawPix(doc)
+  drawPix(_l)
   
   
 

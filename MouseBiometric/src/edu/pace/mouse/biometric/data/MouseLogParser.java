@@ -12,6 +12,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import edu.pace.mouse.biometric.core.FeatureResult;
+
 /**
  * 
  * @author Venugopala C
@@ -27,6 +29,7 @@ public class MouseLogParser {
 	private ArrayList<MouseDoubleClick> mouseDoubleClicks = null;
 	private ArrayList<MouseMove> mouseMoves = null;
 	private ArrayList<MousePointer> mousePointers = null;
+	private ArrayList<MouseMoveCurve> mouseMoveCurves = null;
 	private MouseUserProfile userProfile= null;
 	public MouseLogParser(String _path){
 		path = _path;
@@ -110,6 +113,41 @@ public class MouseLogParser {
 			}
 		}
 		return mousePointers;
+	}
+	private double getSlope(MouseMove a, MouseMove b){
+		double ydiff = a.getYpix() - b.getYpix();
+		if (a.getXpix() == b.getXpix())
+			return ydiff / 0.00000001;
+		else
+			return ydiff/ (a.getXpix() - b.getXpix());
+	}
+	private boolean hasSignChanged(double f, double s){
+		if ((f<0 && s<0) ||(f>=0 && s>=0))
+			return false;
+		else
+			return true;
+	}
+	public ArrayList<MouseMoveCurve> getMouseCurves(){
+		if (null == mouseMoveCurves){
+			mouseMoveCurves = new ArrayList<MouseMoveCurve>(10);
+			ArrayList<MouseMove> moves = getMouseMoves();
+			MouseMove _pt = null;
+			ArrayList<MouseMove> points = new ArrayList<MouseMove>(10);
+			double slope=0, newslope;
+			for (MouseMove mouseMove : moves) {
+				if (null != _pt){
+					newslope = getSlope(_pt, mouseMove);
+					if(points.size() > 5 && hasSignChanged(slope, newslope)){
+						mouseMoveCurves.add(new MouseMoveCurve(points));
+						points = new ArrayList<MouseMove>(10);
+					}
+					points.add(mouseMove);
+				}else
+					points.add(mouseMove);
+				_pt = mouseMove;
+			}
+		}
+		return mouseMoveCurves;
 	}
 
 	/*public List<MouseMove> getMouseMoves(String window){
