@@ -10,11 +10,12 @@ import edu.pace.mouse.biometric.util.Util;
 
 
 public class MouseMoveCurveLength implements Feature{
-	private MouseLogParser parser;
 	private ArrayList<MouseMove> moves;
 	public MouseMoveCurveLength(MouseLogParser _Parser){
-		parser = _Parser;
-		moves = parser.getMouseMoves();
+		moves = _Parser.getMouseMoves();
+	}
+	public MouseMoveCurveLength(ArrayList<MouseMove> moves){
+		this.moves = moves;
 	}
 	public FeatureResult[] extract(){
 		MouseMove _pt = null;

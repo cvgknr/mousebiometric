@@ -10,11 +10,12 @@ import edu.pace.mouse.biometric.util.Util;
 
 
 public class MouseMoveTotalCurveTime implements Feature{
-	private MouseLogParser parser;
 	private ArrayList<MouseMove> moves;
 	public MouseMoveTotalCurveTime(MouseLogParser _Parser){
-		parser = _Parser;
-		moves = parser.getMouseMoves();
+		moves = _Parser.getMouseMoves();
+	}
+	public MouseMoveTotalCurveTime( ArrayList<MouseMove> moves){
+		this.moves = moves;
 	}
 	public FeatureResult[] extract(){
 		MouseMove _pt = null;
@@ -25,6 +26,6 @@ public class MouseMoveTotalCurveTime implements Feature{
 			}
 			_pt = mouseMove;
 		}
-		return new FeatureResult[]{new FeatureResult(getClass().getName(), "Mouse Move Total Curve Time", ""+sum, "MilliSeconds")};
+		return new FeatureResult[]{new FeatureResult(getClass().getName(), "Mouse Move Total Curve Time", ""+sum, "Milliseconds")};
 	}
 }

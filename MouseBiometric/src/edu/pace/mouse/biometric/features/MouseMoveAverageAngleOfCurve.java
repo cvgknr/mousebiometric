@@ -14,6 +14,9 @@ public class MouseMoveAverageAngleOfCurve implements Feature{
 	public MouseMoveAverageAngleOfCurve(MouseLogParser _Parser){
 		moves = _Parser.getMouseMoves();
 	}
+	public MouseMoveAverageAngleOfCurve(ArrayList<MouseMove> moves){
+		this.moves = moves;
+	}
 	public FeatureResult[] extract(){
 		MouseMove _pt = null;
 		double sum = 0, min = 0, max = 0, angle;

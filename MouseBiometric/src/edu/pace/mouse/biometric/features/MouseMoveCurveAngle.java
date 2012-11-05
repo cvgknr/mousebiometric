@@ -11,12 +11,14 @@ import edu.pace.mouse.biometric.util.Util;
 
 
 public class MouseMoveCurveAngle implements Feature{
-	private MouseLogParser parser;
 	private ArrayList<MouseMove> moves;
 	public MouseMoveCurveAngle(MouseLogParser _Parser){
-		parser = _Parser;
-		moves = parser.getMouseMoves();
+		moves = _Parser.getMouseMoves();
 	}
+	public MouseMoveCurveAngle(ArrayList<MouseMove> moves){
+		this.moves = moves;
+	}
+	
 	private double getSlope(MouseMove a, MouseMove b){
 		double ydiff = a.getYpix() - b.getYpix();
 		if (a.getXpix() == b.getXpix())
