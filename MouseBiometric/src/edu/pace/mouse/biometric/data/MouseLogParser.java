@@ -30,7 +30,8 @@ public class MouseLogParser {
 	private ArrayList<MouseMove> mouseMoves = null;
 	private ArrayList<MousePointer> mousePointers = null;
 	private ArrayList<MouseMoveCurve> mouseMoveCurves = null;
-	private ArrayList<MouseDragDrop> mouseDragDrop= null;
+	private ArrayList<MouseDragDrop> mouseDragDrops= null;
+	private ArrayList<MouseWheelMove> mouseWheelMoves = null;
 	private MouseUserProfile userProfile= null;
 	public MouseLogParser(String _path){
 		path = _path;
@@ -163,8 +164,8 @@ public class MouseLogParser {
 		return null;
 	}
 	public ArrayList<MouseDragDrop> getMouseDragDrop(){
-		if (null == mouseDragDrop){
-			mouseDragDrop = new ArrayList<MouseDragDrop>(10);
+		if (null == mouseDragDrops){
+			mouseDragDrops = new ArrayList<MouseDragDrop>(10);
 			ArrayList<MouseMove> moves = getMouseMoves();
 			ArrayList<MouseClick> clicks = getMouseClicks();
 			MouseDragDrop d = null;
@@ -175,11 +176,23 @@ public class MouseLogParser {
 				if (hand.equals(mouseClick.getButton())){
 					d = checkDragDrop(mouseClick,moves);
 					if(null != d)
-						mouseDragDrop.add(d);
+						mouseDragDrops.add(d);
 				}
 			}
 		}
-		return mouseDragDrop;
+		return mouseDragDrops;
+	}
+	public ArrayList<MouseWheelMove> getMouseWheelMoves(){
+		if (null == mouseWheelMoves){
+			mouseWheelMoves = new ArrayList<MouseWheelMove>();
+			NodeList _list = dom.getElementsByTagName("mouseWheels");
+			if (0 != _list.getLength()){
+				_list = _list.item(0).getChildNodes();
+				for (int i=0;i<_list.getLength();i++)
+					mouseWheelMoves.add(new MouseWheelMove(_list.item(i))); 
+			}
+		}
+		return mouseWheelMoves;
 	}
 	/*public List<MouseMove> getMouseMoves(String window){
 		NodeList _list = dom.getElementsByTagName("mouseMoves");
