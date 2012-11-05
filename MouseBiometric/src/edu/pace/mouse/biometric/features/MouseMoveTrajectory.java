@@ -20,48 +20,57 @@ public class MouseMoveTrajectory implements Feature{
 		curves = parser.getMouseCurves();
 	}
 	void computeCurveSize(MouseMoveCurve curve){
-		long size = curves.size();
-		if (size < minSize)
-			minSize = size;
-		if (maxSize > size)
-			maxSize = size;
-		sumSize += size;
+		long value = curves.size();
+		if (value < minSize)
+			minSize = value;
+		if (value > maxSize)
+			maxSize = value;
+		sumSize += value;
 	}
 	void computeCurveLength(MouseMoveCurve curve){
-		long size = Long.parseLong(new MouseMoveCurveLength(curve.getPoints()).extract()[0].getValue());
-		if (size < minLength)
-			minLength = size;
-		if (maxLength > size)
-			maxLength = size;
-		sumLength+= size;
+		long value = Long.parseLong(new MouseMoveCurveLength(curve.getPoints()).extract()[0].getValue());
+		if (value < minLength)
+			minLength = value;
+		if (value > maxLength)
+			maxLength = value;
+		sumLength+= value;
 	}
 	void computeCurveTime(MouseMoveCurve curve){
-		long size = Long.parseLong(new MouseMoveTotalCurveTime(curve.getPoints()).extract()[0].getValue());
-		if (size < minTime)
-			minTime = size;
-		if (maxTime > size)
-			maxTime = size;
-		sumTime+= size;
+		long value = Long.parseLong(new MouseMoveTotalCurveTime(curve.getPoints()).extract()[0].getValue());
+		if (value < minTime)
+			minTime = value;
+		if (value > maxTime)
+			maxTime = value;
+		sumTime+= value;
 	}
 	void computeCurveSpeed(MouseMoveCurve curve){
-		//TODO -- pending 
+		FeatureResult [] f = new MouseMoveSpeedOfCurve(curve.getPoints()).extract();
+		sumSpeed += Long.parseLong(f[0].getValue());
+		long value = Long.parseLong(f[1].getValue());
+		if (value < minSpeed)
+			minSpeed = value;
+		value = Long.parseLong(f[2].getValue());
+		if (value > maxSpeed)
+			maxSpeed = value;
+		sumAngle+= value;
+
 	}
 	void computeCurveAngle(MouseMoveCurve curve){
-		long size = Long.parseLong(new MouseMoveCurveAngle(curve.getPoints()).extract()[0].getValue());
-		if (size < minAngle)
-			minAngle = size;
-		if (maxAngle > size)
-			maxAngle = size;
-		sumAngle+= size;
+		long value = Long.parseLong(new MouseMoveCurveAngle(curve.getPoints()).extract()[0].getValue());
+		if (value < minAngle)
+			minAngle = value;
+		if (value > maxAngle)
+			maxAngle = value;
+		sumAngle+= value;
 		
 		FeatureResult [] f = new MouseMoveAverageAngleOfCurve(curve.getPoints()).extract();
-		size = Long.parseLong(f[1].getValue());
-		if (size < minOfMinAngle)
-			minOfMinAngle = size;
+		value = Long.parseLong(f[1].getValue());
+		if (value < minOfMinAngle)
+			minOfMinAngle = value;
 		
-		size = Long.parseLong(f[2].getValue());
-		if (maxOfMaxAngle > size)
-			maxOfMaxAngle = size;
+		value = Long.parseLong(f[2].getValue());
+		if (value > maxOfMaxAngle)
+			maxOfMaxAngle = value;
 	}
 	
 	public FeatureResult[] extract(){
@@ -93,6 +102,11 @@ public class MouseMoveTrajectory implements Feature{
 				new FeatureResult(getClass().getName(), "Minimum Time of a curve in a trajectory", Util.format(minTime), "Milliseconds"),
 				new FeatureResult(getClass().getName(), "Maximum Time of a curve in a trajectory", Util.format(maxTime), "Milliseconds"),
 
+				new FeatureResult(getClass().getName(), "Average Time of a curve in a trajectory", Util.format(avgSpeed), "Pixels/Milliseconds"),
+				new FeatureResult(getClass().getName(), "Minimum Time of a curve in a trajectory", Util.format(minSpeed), "Pixels/Milliseconds"),
+				new FeatureResult(getClass().getName(), "Maximum Time of a curve in a trajectory", Util.format(maxSpeed), "Pixels/Milliseconds"),
+
+				
 				new FeatureResult(getClass().getName(), "Average Angle of a curve in a trajectory", Util.format(avgAngle), "Degree"),
 				new FeatureResult(getClass().getName(), "Minimum Angle of a curve in a trajectory", Util.format(minAngle), "Degree"),
 				new FeatureResult(getClass().getName(), "Maximum Angle of a curve in a trajectory", Util.format(maxAngle), "Degree"),

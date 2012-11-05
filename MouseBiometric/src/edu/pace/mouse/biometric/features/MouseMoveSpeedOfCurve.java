@@ -14,6 +14,9 @@ public class MouseMoveSpeedOfCurve implements Feature{
 	public MouseMoveSpeedOfCurve(MouseLogParser _Parser){
 		moves = _Parser.getMouseMoves();
 	}
+	public MouseMoveSpeedOfCurve(ArrayList<MouseMove> moves){
+		this.moves = moves;
+	}
 	public FeatureResult[] extract(){
 		MouseMove _pt = null;
 		double sum = 0;

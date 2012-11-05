@@ -30,6 +30,7 @@ public class MouseLogParser {
 	private ArrayList<MouseMove> mouseMoves = null;
 	private ArrayList<MousePointer> mousePointers = null;
 	private ArrayList<MouseMoveCurve> mouseMoveCurves = null;
+	private ArrayList<MouseDragDrop> mouseDragDrop= null;
 	private MouseUserProfile userProfile= null;
 	public MouseLogParser(String _path){
 		path = _path;
@@ -55,7 +56,7 @@ public class MouseLogParser {
 		return userProfile;
 	}
 	private boolean isDoubleClick(MouseClick first, MouseClick second){
-		if( (Long.parseLong(second.getMousereleasetime()) - Long.parseLong(first.getMousepresstime()))<=500)
+		if( (second.getMousereleasetime() - first.getMousepresstime())<=500)
 			return true;
 		return false;
 	}
@@ -149,7 +150,37 @@ public class MouseLogParser {
 		}
 		return mouseMoveCurves;
 	}
-
+	private MouseDragDrop checkDragDrop(MouseClick click,ArrayList<MouseMove> moves){
+		long press = click.getMousepresstime();
+		long release = click.getMousereleasetime();
+		ArrayList<MouseMove> m = new ArrayList<MouseMove>(2);
+		for (MouseMove mouseMove : moves) {
+			if (press>=mouseMove.getStarttime() && release<=mouseMove.getStarttime())
+				m.add(mouseMove);
+		}
+		if (m.size()>0)
+			return new MouseDragDrop(click, m);
+		return null;
+	}
+	public ArrayList<MouseDragDrop> getMouseDragDrop(){
+		if (null == mouseDragDrop){
+			mouseDragDrop = new ArrayList<MouseDragDrop>(10);
+			ArrayList<MouseMove> moves = getMouseMoves();
+			ArrayList<MouseClick> clicks = getMouseClicks();
+			MouseDragDrop d = null;
+			String hand = getUserProfile().getHanded();
+			if (null == hand)
+				hand = "left";
+			for (MouseClick mouseClick : clicks) {
+				if (hand.equals(mouseClick.getButton())){
+					d = checkDragDrop(mouseClick,moves);
+					if(null != d)
+						mouseDragDrop.add(d);
+				}
+			}
+		}
+		return mouseDragDrop;
+	}
 	/*public List<MouseMove> getMouseMoves(String window){
 		NodeList _list = dom.getElementsByTagName("mouseMoves");
 		if (0 != _list.getLength()){
