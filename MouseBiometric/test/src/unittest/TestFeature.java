@@ -16,7 +16,7 @@ import edu.pace.mouse.biometric.features.MouseMoveCurveAngle;
 public class TestFeature{
 	public static void main(String []args){
 		//MouseLogParser _mParser = new MouseLogParser("./test/python/NedBakelman_WordProcessor_001.xml");
-		MouseLogParser _mParser = new MouseLogParser("./logsamples/VenugopalaChannarayappa_Browser_001.xml");
+		MouseLogParser _mParser = new MouseLogParser("./logsamples/Venugopala3_Browser_001.xml");
 		MouseUserProfile _p = _mParser.getUserProfile();
 		_p.print();
 		/*ArrayList<MouseClick> mc = _mParser.getMouseClicks();

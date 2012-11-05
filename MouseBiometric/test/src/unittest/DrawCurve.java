@@ -2,6 +2,7 @@ package unittest;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -36,7 +37,8 @@ public class DrawCurve extends JFrame{
 		ArrayList<MouseMove> points = curve.getPoints();
 		MouseMove _pt = null;
 		g.drawString("(" +points.get(0).getXpix() + ", " + points.get(0).getYpix() + ")" , points.get(0).getXpix(), points.get(0).getYpix());
-		g.drawString("(" +points.get(points.size()-1).getXpix() + ", " + points.get(points.size()-1).getYpix() + ")" , points.get(points.size()-1).getXpix(), points.get(points.size()-1).getYpix());
+		//g.drawString("(" +points.get(points.size()-1).getXpix() + ", " + points.get(points.size()-1).getYpix() + ")" , points.get(points.size()-1).getXpix(), points.get(points.size()-1).getYpix());
+		
 		for (MouseMove mouseMove : points) {
 			if (null != _pt){
 				g.drawLine(_pt.getXpix(), _pt.getYpix(), mouseMove.getXpix(), mouseMove.getYpix());
