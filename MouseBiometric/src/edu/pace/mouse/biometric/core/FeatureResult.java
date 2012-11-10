@@ -27,4 +27,7 @@ public class FeatureResult {
 	public String getClassName() {
 		return className;
 	}
+	public String toString(){
+		return getClassName() + " " + getLabel() + " : " + getValue() + " " + getUnit();
+	}
 }

@@ -10,7 +10,6 @@ import edu.pace.mouse.biometric.data.MouseMove;
 import edu.pace.mouse.biometric.data.MouseMoveCurve;
 import edu.pace.mouse.biometric.data.MousePointer;
 import edu.pace.mouse.biometric.data.MouseUserProfile;
-import edu.pace.mouse.biometric.features.MouseMoveCurveAngle;
 
 
 public class TestFeature{
@@ -37,7 +36,7 @@ public class TestFeature{
 		}*/
 		//MouseMoveCurveAngle _mc = new MouseMoveCurveAngle(_mParser);
 		//_mc.extract();
-		ArrayList<MouseMoveCurve> curves = _mParser.getMouseCurves();
+		/*ArrayList<MouseMoveCurve> curves = _mParser.getMouseCurves();
 		int i = 0;
 		for (MouseMoveCurve mouseMoveCurve : curves) {
 			System.out.println("Curve " + (++i) + " Points are: " + mouseMoveCurve.getPoints().size() );
@@ -45,7 +44,7 @@ public class TestFeature{
 		//DrawCurve c = new DrawCurve(curves.get(238));
 		DrawCurve c = new DrawCurve(curves);
         c.setSize(new Dimension(1500,1200));
-        c.setVisible(true);
+        c.setVisible(true);*/
 
 	}
 }

@@ -8,11 +8,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import edu.pace.mouse.biometric.core.FeatureResult;
 
 /**
  * 
@@ -30,8 +27,12 @@ public class MouseLogParser {
 	private ArrayList<MouseMove> mouseMoves = null;
 	private ArrayList<MousePointer> mousePointers = null;
 	private ArrayList<MouseMoveCurve> mouseMoveCurves = null;
-	private ArrayList<MouseDragDrop> mouseDragDrops= null;
+	private ArrayList<MouseDragDropTrajectory> mouseDragDrops= null;
 	private ArrayList<MouseWheelMove> mouseWheelMoves = null;
+	private ArrayList<MouseMoveTrajectory> mouseMoveTrajectories=null;
+	private ArrayList<MouseMoveTrajectory> sysWakeupTrajectories=null;
+	private ArrayList<MouseMoveClickTrajectory> moveClickTrajectories=null;
+	
 	private MouseUserProfile userProfile= null;
 	public MouseLogParser(String _path){
 		path = _path;
@@ -116,12 +117,12 @@ public class MouseLogParser {
 		}
 		return mousePointers;
 	}
-	private double getSlope(MouseMove a, MouseMove b){
-		double ydiff = a.getYpix() - b.getYpix();
-		if (a.getXpix() == b.getXpix())
+	private double getSlope(long ax, long ay, long bx, long by){
+		double ydiff = ay - by;
+		if (ax == bx)
 			return ydiff / 0.00000001;
 		else
-			return ydiff/ (a.getXpix() - b.getXpix());
+			return ydiff/ (ax - bx);
 	}
 	private boolean hasSignChanged(double f, double s){
 		if ((f<0 && s<0) ||(f>=0 && s>=0))
@@ -129,7 +130,7 @@ public class MouseLogParser {
 		else
 			return true;
 	}
-	public ArrayList<MouseMoveCurve> getMouseCurves(){
+	/*public ArrayList<MouseMoveCurve> getMouseCurves(){
 		if (null == mouseMoveCurves){
 			mouseMoveCurves = new ArrayList<MouseMoveCurve>(10);
 			ArrayList<MouseMove> moves = getMouseMoves();
@@ -150,38 +151,7 @@ public class MouseLogParser {
 			}
 		}
 		return mouseMoveCurves;
-	}
-	private MouseDragDrop checkDragDrop(MouseClick click,ArrayList<MouseMove> moves){
-		long press = click.getMousepresstime();
-		long release = click.getMousereleasetime();
-		ArrayList<MouseMove> m = new ArrayList<MouseMove>(2);
-		for (MouseMove mouseMove : moves) {
-			if (press>=mouseMove.getStarttime() && release<=mouseMove.getStarttime())
-				m.add(mouseMove);
-		}
-		if (m.size()>0)
-			return new MouseDragDrop(click, m);
-		return null;
-	}
-	public ArrayList<MouseDragDrop> getMouseDragDrop(){
-		if (null == mouseDragDrops){
-			mouseDragDrops = new ArrayList<MouseDragDrop>(10);
-			ArrayList<MouseMove> moves = getMouseMoves();
-			ArrayList<MouseClick> clicks = getMouseClicks();
-			MouseDragDrop d = null;
-			String hand = getUserProfile().getHanded();
-			if (null == hand)
-				hand = "left";
-			for (MouseClick mouseClick : clicks) {
-				if (hand.equals(mouseClick.getButton())){
-					d = checkDragDrop(mouseClick,moves);
-					if(null != d)
-						mouseDragDrops.add(d);
-				}
-			}
-		}
-		return mouseDragDrops;
-	}
+	}*/
 	public ArrayList<MouseWheelMove> getMouseWheelMoves(){
 		if (null == mouseWheelMoves){
 			mouseWheelMoves = new ArrayList<MouseWheelMove>();
@@ -194,6 +164,120 @@ public class MouseLogParser {
 		}
 		return mouseWheelMoves;
 	}
+	private ArrayList<MouseMove> getTrajectoryMoves(MousePointer mp,ArrayList<MouseMove> mms){
+		ArrayList<MouseMove> tmm = new ArrayList<MouseMove>(5);
+		boolean findStart = true;
+		boolean findEnd = true;
+		long mpx = mp.getXpix(), mpy=mp.getXpix(), mpxfinal = mp.getXfinalpix(), mpyfinal = mp.getYfinalpix();
+		long mpstart = mp.getStarttime();
+		
+		for (MouseMove mouseMove : mms) {
+			if (findStart){
+				if (mouseMove.getXpix() == mpx && mouseMove.getYpix() == mpy && mouseMove.getStarttime() == mpstart){
+					findStart = false;
+				}else
+					continue;
+			}
+			tmm.add(mouseMove);
+			if (mouseMove.getXpix() == mpxfinal && mouseMove.getYpix() == mpyfinal)
+				break;
+			
+		}
+		
+		return tmm;
+	}
+	public ArrayList<MouseMoveTrajectory> getMouseMoveTrajectories(){
+		if (null == mouseMoveTrajectories){
+			mouseMoveTrajectories = new ArrayList<MouseMoveTrajectory>(10);
+			ArrayList<MousePointer> mps = getMousePointers();
+			ArrayList<MouseMove> mms = getMouseMoves();
+			for (MousePointer mousePointer : mps) {
+				mouseMoveTrajectories.add(new MouseMoveTrajectory(mousePointer, getTrajectoryMoves(mousePointer, mms)));
+			}
+		}
+		return mouseMoveTrajectories;
+	}
+	private boolean isWakeup(MouseMoveTrajectory mmt, ArrayList<MouseClick> clicks){
+		ArrayList<MouseMove> mml = mmt.getMouseMoves();
+		MousePointer mp = mmt.getMousePointer();
+		long starttime = mp.getStarttime();
+		long endtime = mp.getEndtime();
+		for (MouseClick mouseClick : clicks) {
+			if (starttime < mouseClick.getMousepresstime() && mouseClick.getMousereleasetime() < endtime)
+				return false;
+		}
+		return true;
+	}
+	/**
+	 * 
+	 * @return return all System Wake up Mouse Move trajectories.
+	 */
+	public ArrayList<MouseMoveTrajectory> getSystemWakeUpTranjectories(){
+		if (null == sysWakeupTrajectories){
+			sysWakeupTrajectories = new ArrayList<MouseMoveTrajectory>(5);
+			ArrayList<MouseMoveTrajectory> mmts = getMouseMoveTrajectories();
+			ArrayList<MouseClick> clicks = getMouseClicks();
+			for (MouseMoveTrajectory mmt : mmts) {
+				if (isWakeup(mmt, clicks))
+					sysWakeupTrajectories.add(mmt);
+			}
+		}
+		return sysWakeupTrajectories;
+	}
+	private MouseClick isMoveClick(MouseMoveTrajectory mmt, ArrayList<MouseClick> clicks){
+		ArrayList<MouseMove> mml = mmt.getMouseMoves();
+		MousePointer mp = mmt.getMousePointer();
+		long starttime = mp.getStarttime();
+		long endtime = mp.getEndtime();
+		for (MouseClick mouseClick : clicks) {
+			if (starttime < mouseClick.getMousepresstime() && mouseClick.getMousereleasetime() < endtime)
+				return null;
+			if (starttime <mouseClick.getMousepresstime() && endtime <= mouseClick.getMousereleasetime())
+				return mouseClick;
+		}
+		return null;
+	}
+	/**
+	 * 
+	 * @return return all System Wake up Mouse Move trajectories.
+	 */
+	public ArrayList<MouseMoveClickTrajectory> getMoveMoveAndClickTrajectory(){
+		if (null == moveClickTrajectories){
+			moveClickTrajectories = new ArrayList<MouseMoveClickTrajectory>(5);
+			ArrayList<MouseMoveTrajectory> mmts = getMouseMoveTrajectories();
+			ArrayList<MouseClick> clicks = getMouseClicks();
+			for (MouseMoveTrajectory mmt : mmts) {
+				MouseClick click = isMoveClick(mmt, clicks);
+				if (null != click)
+					moveClickTrajectories.add(new MouseMoveClickTrajectory(mmt, click));
+			}
+		}
+		return moveClickTrajectories;
+	}
+	private MouseClick isDragDrop(MouseMoveTrajectory mmt,ArrayList<MouseClick> clicks){
+		ArrayList<MouseMove> mml = mmt.getMouseMoves();
+		MousePointer mp = mmt.getMousePointer();
+		long starttime = mp.getStarttime();
+		long endtime = mp.getEndtime();
+		for (MouseClick mouseClick : clicks) {
+			//TODO:  Need some more thinking on this
+		}
+		return null;
+	}
+	public ArrayList<MouseDragDropTrajectory> getMouseDragDropTrajectory(){
+		if (null == mouseDragDrops){
+			mouseDragDrops = new ArrayList<MouseDragDropTrajectory>(10);			
+			ArrayList<MouseMoveTrajectory> mmts = getMouseMoveTrajectories();
+			ArrayList<MouseClick> clicks = getMouseClicks();
+			for (MouseMoveTrajectory mmt : mmts) {
+				MouseClick click = isDragDrop(mmt, clicks);
+				if (null != click)
+					mouseDragDrops.add(new MouseDragDropTrajectory(mmt, click));
+			}
+		}
+		return mouseDragDrops;
+	}
+
 	/*public List<MouseMove> getMouseMoves(String window){
 		NodeList _list = dom.getElementsByTagName("mouseMoves");
 		if (0 != _list.getLength()){

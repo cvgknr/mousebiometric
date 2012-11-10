@@ -32,8 +32,8 @@ public class MousePointer {
 	private int yfinalpix;
 	private float distancepix;
 	private float lengthpix;
-	private String starttime;
-	private String endtime;
+	private long starttime;
+	private long endtime;
 	private int duration;
 	private String window;
 	private String context;
@@ -63,9 +63,9 @@ public class MousePointer {
 				else if ("lengthpix".equals(name))
 					lengthpix = Float.parseFloat(value);
 				else if ("starttime".equals(name))
-					starttime = value;
+					starttime = Long.parseLong(value);
 				else if ("endtime".equals(name))
-					endtime = value;
+					endtime = Long.parseLong(value);
 				else if ("duration".equals(name))
 					duration = Integer.parseInt(value);
 				else if ("window".equals(name))
@@ -113,10 +113,10 @@ public class MousePointer {
 	public float getLengthpix() {
 		return lengthpix;
 	}
-	public String getStarttime() {
+	public long getStarttime() {
 		return starttime;
 	}
-	public String getEndtime() {
+	public long getEndtime() {
 		return endtime;
 	}
 	public int getDuration() {
