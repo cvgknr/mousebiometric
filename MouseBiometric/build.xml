@@ -1,0 +1,46 @@
+<!--
+ *===================================================================
+ *
+ * Licensed Materials - Property of IBM
+ * IBM Workload Plugin Development Kit (Tool)
+ * Copyright IBM Corporation 2011. All Rights Reserved.
+ * US Government Users Restricted Rights - Use, duplication or disclosure
+ * restricted by GSA ADP Schedule Contract with IBM Corp.
+ *
+ *===================================================================
+-->
+<project name="MouseBiometric" default="publish" basedir=".">
+	
+    <dirname property="mousebiometric.project.dir" file="${ant.file.plugin.builds}"/>
+
+	<target name="publish" depends="clean, compile">
+        <jar file="${mousebiometric.project.dir}/export/JIWAPSensor.jar">
+            <fileset dir="${mousebiometric.project.dir}/bin"/>
+            <!--<fileset dir="${export.dir}/src" />-->
+            <fileset dir=".">
+                <include name="${mousebiometric.project.dir}/eventTypeResources/"/>
+            </fileset>
+        </jar>
+		<delete dir="${mousebiometric.project.dir}/export/bin"/>
+	</target>
+	 <target name="compile" >
+	 	<mkdir dir="${mousebiometric.project.dir}/export"/>
+	 	<mkdir dir="${mousebiometric.project.dir}/export/bin"/>
+		<javac srcdir="src" destdir="${mousebiometric.project.dir}/export/bin">
+	            <classpath>
+	                <fileset dir="${mousebiometric.project.dir}/lib">
+	                    <include name="*.jar"/>
+	                </fileset>
+	            </classpath>
+	        </javac>
+	        
+	        <copy todir="${mousebiometric.project.dir}/export/bin">
+	            <fileset dir="src" includes="**/*.properties" />
+	        </copy>
+	</target>
+	
+	<target name="clean">
+	    <!--<delete dir="${mousebiometric.project.dir}/export"/> -->
+    </target>
+	
+</project>
