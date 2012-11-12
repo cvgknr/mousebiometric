@@ -30,7 +30,7 @@ public class MouseWheelMove {
 	private long starttime;
 	private long endtime;
 	private long number;
-	private int mouseduration;
+	private int duration;
 	private String window;
 	private String context;
 	public MouseWheelMove(Node n){
@@ -59,8 +59,8 @@ public class MouseWheelMove {
 					starttime = Long.parseLong(value);
 				else if ("endtime".equals(name))
 					endtime = Long.parseLong(value);
-				else if ("mouseduration".equals(name))
-					mouseduration = Integer.parseInt(value);
+				else if ("duration".equals(name))
+					duration = Integer.parseInt(value);
 				else if ("window".equals(name))
 					window = value;
 				else if ("context".equals(name))
@@ -77,7 +77,7 @@ public class MouseWheelMove {
 		System.out.println("number: " + number);
 		System.out.println("startitme: " + starttime);
 		System.out.println("endtime: " + endtime);
-		System.out.println("mouseduration: " + mouseduration);
+		System.out.println("mouseduration: " + duration);
 		System.out.println("window: " + window);
 		System.out.println("context: " + context);
 		System.out.println("--------------------------------------------");
@@ -95,8 +95,8 @@ public class MouseWheelMove {
 		return ypix;
 	}
 
-	public int getMouseduration() {
-		return mouseduration;
+	public int getDuration() {
+		return duration;
 	}
 
 	public String getWindow() {

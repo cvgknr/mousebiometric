@@ -26,7 +26,6 @@ public class MouseLogParser {
 	private ArrayList<MouseDoubleClick> mouseDoubleClicks = null;
 	private ArrayList<MouseMove> mouseMoves = null;
 	private ArrayList<MousePointer> mousePointers = null;
-	private ArrayList<MouseMoveCurve> mouseMoveCurves = null;
 	private ArrayList<MouseDragDropTrajectory> mouseDragDrops= null;
 	private ArrayList<MouseWheelMove> mouseWheelMoves = null;
 	private ArrayList<MouseMoveTrajectory> mouseMoveTrajectories=null;
@@ -62,6 +61,11 @@ public class MouseLogParser {
 			return true;
 		return false;
 	}
+	/**
+	 * Find all clicks (left, right) and double clicks.
+	 *  
+	 * @return
+	 */
 	public ArrayList<MouseClick> getMouseClicks(){
 		if (null == mouseClicks){
 			mouseClicks = new ArrayList<MouseClick>(10);
