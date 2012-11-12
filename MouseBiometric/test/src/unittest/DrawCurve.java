@@ -8,10 +8,9 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 
 import edu.pace.mouse.biometric.data.MouseMove;
-import edu.pace.mouse.biometric.data.MouseMoveCurve;
 
 public class DrawCurve extends JFrame{
-	private MouseMoveCurve curve = null;
+	/*private MouseMoveCurve curve = null;
 	ArrayList<MouseMoveCurve> curves = null;
 	public DrawCurve(MouseMoveCurve _curve){
 		this.curve = _curve;
@@ -54,5 +53,5 @@ public class DrawCurve extends JFrame{
 				paintCurve(g, mouseMoveCurve);
 			}
 		}
-	}
+	}*/
 }

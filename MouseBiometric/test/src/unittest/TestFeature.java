@@ -7,7 +7,6 @@ import edu.pace.mouse.biometric.data.MouseClick;
 import edu.pace.mouse.biometric.data.MouseDoubleClick;
 import edu.pace.mouse.biometric.data.MouseLogParser;
 import edu.pace.mouse.biometric.data.MouseMove;
-import edu.pace.mouse.biometric.data.MouseMoveCurve;
 import edu.pace.mouse.biometric.data.MousePointer;
 import edu.pace.mouse.biometric.data.MouseUserProfile;
 

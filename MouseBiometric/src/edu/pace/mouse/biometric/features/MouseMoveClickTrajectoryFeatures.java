@@ -11,9 +11,9 @@ import edu.pace.mouse.biometric.util.ComputStdMethodDouble;
 import edu.pace.mouse.biometric.util.ComputStdMethodLong;
 import edu.pace.mouse.biometric.util.Util;
 
-public class MoveClickTrajectoryFeatures implements Feature{
+public class MouseMoveClickTrajectoryFeatures implements Feature{
 	private ArrayList<MouseMoveClickTrajectory> trajectories;
-	public MoveClickTrajectoryFeatures(MouseLogParser parser){
+	public MouseMoveClickTrajectoryFeatures(MouseLogParser parser){
 		trajectories = parser.getMoveMoveAndClickTrajectory();
 	}
 	public FeatureResult[] extract(){
