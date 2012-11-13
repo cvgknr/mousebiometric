@@ -104,7 +104,7 @@ public class MouseBiometricInterface extends JFrame {
 
 		outStatusLabel = new JLabel();
 		getContentPane().add(outStatusLabel);
-		outStatusLabel.setBounds(500, 120, 338, 20);
+		outStatusLabel.setBounds(400, 120, 338, 20);
 		outStatusLabel.setFont(new Font(Font.SERIF, Font.BOLD, 18));				
 		outStatusLabel.setForeground(new Color(25, 25, 112));
 
