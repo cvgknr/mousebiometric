@@ -38,9 +38,6 @@ public class MoveDragDropTrajectoryFeatures implements Feature{
 			//length[i] = t.getLength();
 			i++;
 		}
-		
-		
-		
 		ComputStdMethodLong result = new ComputStdMethodLong(points);
 		f[index++] = new FeatureResult(getClass().getName(), "Mouse drag and drop Trajectory Points Mean", Util.format(result.getMean()), "Points");
 		f[index++] = new FeatureResult(getClass().getName(), "Mouse drag and drop Trajectory Points Median", Util.format(result.getMedian()), "Points");

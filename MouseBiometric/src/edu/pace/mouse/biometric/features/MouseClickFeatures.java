@@ -17,22 +17,22 @@ import edu.pace.mouse.biometric.util.Util;
  */
 
 public class MouseClickFeatures implements Feature{
-	private int totalCount = 0;
-	private int leftCount = 0;
-	private int rightCount = 0;
-	private int doubleCount = 0;
-	/*private int leftMinutes = 0;
-	private int rightMinutes = 0;
-	private int doubleMinutes = 0;*/
-	private int leftMin = 0;
-	private int leftMax = 0;
-	private int leftAvg = 0;
-	private int rightMin = 0;
-	private int rightMax = 0;
-	private int rightAvg = 0;
-	private int doubleMin = 0;
-	private int doubleMax = 0;
-	private int doubleAvg = 0;
+	private long totalCount = 0;
+	private long leftCount = 0;
+	private long rightCount = 0;
+	private long doubleCount = 0;
+	/*private long leftMinutes = 0;
+	private long rightMinutes = 0;
+	private long doubleMinutes = 0;*/
+	private long leftMin = 0;
+	private long leftMax = 0;
+	private long leftAvg = 0;
+	private long rightMin = 0;
+	private long rightMax = 0;
+	private long rightAvg = 0;
+	private long doubleMin = 0;
+	private long doubleMax = 0;
+	private long doubleAvg = 0;
 	
 	
 	
@@ -71,7 +71,7 @@ public class MouseClickFeatures implements Feature{
 			rightCount /= rightCount;
 		//leftMinutes /=60;
 		//rightMinutes/=60;
-		int duration;
+		long duration;
 		for (MouseDoubleClick ele :mouseDoubleClicks){
 			duration = ele.getFirstClick().getMouseduration() + ele.getSecondClick().getMouseduration();
 			//doubleMinutes += duration; 

@@ -65,8 +65,6 @@ public class MouseMove {
 		System.out.println("starttime: " + starttime);
 		System.out.println("window: " + window);
 		System.out.println("context: " + context);
-		
-		
 		System.out.println("--------------------------------------------");
 	}
 	public int getId() {

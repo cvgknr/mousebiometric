@@ -28,7 +28,7 @@ public class MouseClick {
 	private String button;
 	private long mousepresstime;
 	private long mousereleasetime;
-	private int mouseduration;
+	private long mouseduration;
 	private String window;
 	private String context;
 	public MouseClick(Node n){
@@ -56,7 +56,7 @@ public class MouseClick {
 				else if ("mousereleasetime".equals(name))
 					mousereleasetime = Long.parseLong(value);
 				else if ("mouseduration".equals(name))
-					mouseduration = Integer.parseInt(value);
+					mouseduration = Long.parseLong(value);
 				else if ("window".equals(name))
 					window = value;
 				else if ("context".equals(name))
@@ -102,7 +102,7 @@ public class MouseClick {
 		return mousereleasetime;
 	}
 
-	public int getMouseduration() {
+	public long getMouseduration() {
 		return mouseduration;
 	}
 

@@ -31,8 +31,8 @@ public class MouseLogParser {
 	private ArrayList<MouseMoveTrajectory> mouseMoveTrajectories=null;
 	private ArrayList<MouseMoveTrajectory> sysWakeupTrajectories=null;
 	private ArrayList<MouseMoveClickTrajectory> moveClickTrajectories=null;
-	
 	private MouseUserProfile userProfile= null;
+
 	public MouseLogParser(String _path){
 		path = _path;
 		dbf = DocumentBuilderFactory.newInstance();
@@ -121,41 +121,6 @@ public class MouseLogParser {
 		}
 		return mousePointers;
 	}
-	private double getSlope(long ax, long ay, long bx, long by){
-		double ydiff = ay - by;
-		if (ax == bx)
-			return ydiff / 0.00000001;
-		else
-			return ydiff/ (ax - bx);
-	}
-	private boolean hasSignChanged(double f, double s){
-		if ((f<0 && s<0) ||(f>=0 && s>=0))
-			return false;
-		else
-			return true;
-	}
-	/*public ArrayList<MouseMoveCurve> getMouseCurves(){
-		if (null == mouseMoveCurves){
-			mouseMoveCurves = new ArrayList<MouseMoveCurve>(10);
-			ArrayList<MouseMove> moves = getMouseMoves();
-			MouseMove _pt = null;
-			ArrayList<MouseMove> points = new ArrayList<MouseMove>(10);
-			double slope=0, newslope;
-			for (MouseMove mouseMove : moves) {
-				if (null != _pt){
-					newslope = getSlope(_pt, mouseMove);
-					if(points.size() > 5 && hasSignChanged(slope, newslope)){
-						mouseMoveCurves.add(new MouseMoveCurve(points));
-						points = new ArrayList<MouseMove>(10);
-					}
-					points.add(mouseMove);
-				}else
-					points.add(mouseMove);
-				_pt = mouseMove;
-			}
-		}
-		return mouseMoveCurves;
-	}*/
 	public ArrayList<MouseWheelMove> getMouseWheelMoves(){
 		if (null == mouseWheelMoves){
 			mouseWheelMoves = new ArrayList<MouseWheelMove>();
@@ -171,7 +136,6 @@ public class MouseLogParser {
 	private ArrayList<MouseMove> getTrajectoryMoves(MousePointer mp,ArrayList<MouseMove> mms){
 		ArrayList<MouseMove> tmm = new ArrayList<MouseMove>(5);
 		boolean findStart = true;
-		boolean findEnd = true;
 		long mpx = mp.getXpix(), mpy=mp.getXpix(), mpxfinal = mp.getXfinalpix(), mpyfinal = mp.getYfinalpix();
 		long mpstart = mp.getStarttime();
 		
@@ -185,9 +149,7 @@ public class MouseLogParser {
 			tmm.add(mouseMove);
 			if (mouseMove.getXpix() == mpxfinal && mouseMove.getYpix() == mpyfinal)
 				break;
-			
 		}
-		
 		return tmm;
 	}
 	public ArrayList<MouseMoveTrajectory> getMouseMoveTrajectories(){
@@ -202,7 +164,6 @@ public class MouseLogParser {
 		return mouseMoveTrajectories;
 	}
 	private boolean isWakeup(MouseMoveTrajectory mmt, ArrayList<MouseClick> clicks){
-		ArrayList<MouseMove> mml = mmt.getMouseMoves();
 		MousePointer mp = mmt.getMousePointer();
 		long starttime = mp.getStarttime();
 		long endtime = mp.getEndtime();
@@ -229,7 +190,6 @@ public class MouseLogParser {
 		return sysWakeupTrajectories;
 	}
 	private MouseClick isMoveClick(MouseMoveTrajectory mmt, ArrayList<MouseClick> clicks){
-		ArrayList<MouseMove> mml = mmt.getMouseMoves();
 		MousePointer mp = mmt.getMousePointer();
 		long starttime = mp.getStarttime();
 		long endtime = mp.getEndtime();
@@ -281,95 +241,4 @@ public class MouseLogParser {
 		}
 		return mouseDragDrops;
 	}
-
-	/*public List<MouseMove> getMouseMoves(String window){
-		NodeList _list = dom.getElementsByTagName("mouseMoves");
-		if (0 != _list.getLength()){
-			Node mouseMoves = _list.item(0);
-			_list = mouseMoves.getChildNodes();
-			Vector<MouseMove> _m = new Vector<MouseMove>(10);
-			MouseMove m;
-			for (int i=0;i<_list.getLength();i++){
-				m = new MouseMove(_list.item(i)); 
-				if (window.equals(m.getWindow()))
-					_m.add(m);
-			}
-			return _m;
-		}
-		return null;
-	}
-	public List<MouseClick> getMouseClicks(String window){
-		NodeList _list = dom.getElementsByTagName("mouseClicks");
-		if (0 != _list.getLength()){
-			Node mouseClicks = _list.item(0);
-			_list = mouseClicks.getChildNodes();
-			List<MouseClick> _m = new Vector<MouseClick>(10);
-			MouseClick m;
-			for (int i=0;i<_list.getLength();i++){
-				m = new MouseClick(_list.item(i)); 
-				if (window.equals(m.getWindow()))
-					_m.add(m);
-			}
-			return _m;
-		}
-		return null;
-	}
-	public List<MousePointer> getMousePointers(){
-		NodeList _list = dom.getElementsByTagName("mousePointers");
-		if (0 != _list.getLength()){
-			Node mousePointers= _list.item(0);
-			_list = mousePointers.getChildNodes();
-			Vector<MousePointer> _m = new Vector<MousePointer>(10);
-			MousePointer m;
-			for (int i=0;i<_list.getLength();i++){
-				m = new MousePointer(_list.item(i)); 
-				_m.add(m);
-			}
-			return _m;
-		}
-		return null;
-	}
-	public List<MousePointer> getMousePointers(String window){
-		NodeList _list = dom.getElementsByTagName("mousePointers");
-		if (0 != _list.getLength()){
-			Node mousePointers = _list.item(0);
-			_list = mousePointers.getChildNodes();
-			Vector<MousePointer> _m = new Vector<MousePointer>(10);
-			MousePointer m;
-			for (int i=0;i<_list.getLength();i++){
-				m = new MousePointer(_list.item(i)); 
-				if (window.equals(m.getWindow()))
-					_m.add(m);
-			}
-			return _m;
-		}
-		return null;
-	}
-	public String[] getMousePointersApps(){
-		NodeList _list = dom.getElementsByTagName("mousePointers");
-		if (0 != _list.getLength()){
-			Node mousePointers = _list.item(0);
-			_list = mousePointers.getChildNodes();
-			HashSet<String> _m = new HashSet<String>(10);
-			MousePointer m;
-			for (int i=0;i<_list.getLength();i++){
-				Node n = _list.item(i);
-				NodeList _clist = n.getChildNodes();
-				for (int j=0;j<_clist.getLength();j++){
-					String name = _clist.item(j).getNodeName();
-					NodeList _l = _clist.item(j).getChildNodes();
-					if (0 == _l.getLength()) continue;
-					String value = _l.item(0).getNodeValue();
-					if ("window".equals(name))
-						_m.add(value);
-				}
-			}
-			Object []_objs = _m.toArray();
-			String []_out = new String[_objs.length];
-			for (int i=0;i<_objs.length;i++)
-				_out[i] = (String)_objs[i];
-			return _out;
-		}
-		return null;
-	}*/
 }
