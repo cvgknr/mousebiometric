@@ -23,7 +23,7 @@ public class MouseDragDropFeatures implements Feature{
 		double distance=0;
 		for (MouseDragDropTrajectory dd : ddt) {
 			distance = dd.getDistance() ;
-			if(distance < min);
+			if(0 == min || distance < min);
 				min = distance;
 			if (distance > max)
 				max = distance;
@@ -50,9 +50,9 @@ public class MouseDragDropFeatures implements Feature{
 	public FeatureResult[] extract() {
 		FeatureResult[] results = new FeatureResult[3];
 		
-		results[0] = new FeatureResult(getClass().getName(), "Maximum distance travelled (drag-drop) during mouse click", ""+ Util.format(max) , "Pixels");
-		results[1] = new FeatureResult(getClass().getName(), "Minimum distance travelled (drag-drop) during mouse click", ""+ Util.format(min) , "Pixels");
-		results[2] = new FeatureResult(getClass().getName(), "Average distance travelled (drag-drop) during mouse click", ""+ Util.format(avg) , "Pixels");
+		results[0] = new FeatureResult(getClass().getSimpleName(), "Maximum distance travelled (drag-drop) during mouse click", ""+ Util.format(max) , "Pixels");
+		results[1] = new FeatureResult(getClass().getSimpleName(), "Minimum distance travelled (drag-drop) during mouse click", ""+ Util.format(min) , "Pixels");
+		results[2] = new FeatureResult(getClass().getSimpleName(), "Average distance travelled (drag-drop) during mouse click", ""+ Util.format(avg) , "Pixels");
 		return results;
 	}
 }

@@ -10,7 +10,11 @@ import java.util.List;
 import edu.pace.mouse.biometric.core.FeatureResult;
 
 public class CSVWriter extends File{
-    FileOutputStream fout=null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	FileOutputStream fout=null;
     OutputStreamWriter writer = null;
 	public CSVWriter(String folder, String filename) {
 		super(folder,filename);

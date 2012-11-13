@@ -3,8 +3,8 @@ package edu.pace.mouse.biometric.util;
 import java.util.Arrays;
 
 public class ComputStdMethodLong{
-	private double mean, median, stddev;
-	private long min, max;
+	private double mean=0, median=0, stddev=0;
+	private long min=0, max=0;
 	public ComputStdMethodLong(long []v){
 		if (null == v || 0 == v.length){
 			mean = median = stddev = 0;
@@ -16,7 +16,7 @@ public class ComputStdMethodLong{
 			
 			for (int i=1;i<v.length;i++) {
 				//Minimum
-				if (v[i] < min)
+				if (0 == min || v[i] < min)
 					min = v[i];
 				//Maximum
 				if (v[i] > max)

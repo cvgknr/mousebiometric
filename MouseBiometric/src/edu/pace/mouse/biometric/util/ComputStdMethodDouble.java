@@ -3,8 +3,8 @@ package edu.pace.mouse.biometric.util;
 import java.util.Arrays;
 //TODO: Need to merge
 public class ComputStdMethodDouble{
-	private double mean, median, stddev;
-	private double min, max;
+	private double mean=0, median=0, stddev=0;
+	private double min=0, max=0;
 	public ComputStdMethodDouble(double []v){
 		if (null == v || 0 == v.length){
 			mean = median = stddev = 0;

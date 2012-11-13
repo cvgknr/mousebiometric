@@ -6,20 +6,21 @@ import java.io.File;
 import edu.pace.mouse.biometric.core.FeatureResult;
 import edu.pace.mouse.biometric.data.MouseLogParser;
 import edu.pace.mouse.biometric.data.MouseUserProfile;
-import edu.pace.mouse.biometric.features.MouseDragDropFeatures;
+import edu.pace.mouse.biometric.features.MoveDragDropTrajectoryFeatures;
 
-public class TestMouseDragDropFeatures{
+public class TestMouseDragDropTrajectoryFeatures {
 	public static void printFeatures(File file){
 		MouseLogParser parser = new MouseLogParser(file.getAbsolutePath());
 		MouseUserProfile _p = parser.getUserProfile();
 		System.out.println("File : " + file.getName());
 		_p.print();
-		MouseDragDropFeatures s = new MouseDragDropFeatures(parser);
+		MoveDragDropTrajectoryFeatures s = new MoveDragDropTrajectoryFeatures(parser);
 		FeatureResult []f = s.extract();
 		for (int i=0;i<f.length;i++){
 			if (null != f[i])
 				System.out.println(f[i].toString());
 		}
+		
 	}
 	public static void main(String []args){
 		String inFolderPath = "C:\\Users\\Administrator\\git\\mouse\\MouseBiometric\\logsamples";
@@ -32,5 +33,4 @@ public class TestMouseDragDropFeatures{
 			}
 		}
 	}
-
 }

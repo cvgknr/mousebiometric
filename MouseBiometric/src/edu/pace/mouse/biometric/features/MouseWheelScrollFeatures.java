@@ -165,46 +165,46 @@ public class MouseWheelScrollFeatures implements Feature{
 	@Override
 	public FeatureResult[] extract() {
 		FeatureResult[] results = new FeatureResult[31];
-		results[0] = new FeatureResult(getClass().getName(), "Total number of wheel spin (scroll up and down) events in a sample", ""+ totalScroll , "Scrolls");
-		results[1] = new FeatureResult(getClass().getName(), "Number of scroll up events in a sample", ""+ scrollUp , "Scrolls");
-		results[2] = new FeatureResult(getClass().getName(), "Number of scroll down events in a sample", ""+ scrollDown , "Scrolls");
+		results[0] = new FeatureResult(getClass().getSimpleName(), "Total number of wheel spin (scroll up and down) events in a sample", ""+ totalScroll , "Scrolls");
+		results[1] = new FeatureResult(getClass().getSimpleName(), "Number of scroll up events in a sample", ""+ scrollUp , "Scrolls");
+		results[2] = new FeatureResult(getClass().getSimpleName(), "Number of scroll down events in a sample", ""+ scrollDown , "Scrolls");
 		
-		results[3] = new FeatureResult(getClass().getName(), "Total time spent (duration) in wheel spin (scroll up and down)", ""+ totalScrollTime , "Seconds");
-		results[4] = new FeatureResult(getClass().getName(), "Average duration for a wheel spin event", Util.format(avgScrollTime) , "Seconds");
-		results[5] = new FeatureResult(getClass().getName(), "Maximum duration for a wheel spin event", ""+ maxScrollTime , "Seconds");
-		results[6] = new FeatureResult(getClass().getName(), "Minimum duration for a wheel spin event", ""+ minScrollTime , "Seconds");
+		results[3] = new FeatureResult(getClass().getSimpleName(), "Total time spent (duration) in wheel spin (scroll up and down)", ""+ totalScrollTime , "Seconds");
+		results[4] = new FeatureResult(getClass().getSimpleName(), "Average duration for a wheel spin event", Util.format(avgScrollTime) , "Seconds");
+		results[5] = new FeatureResult(getClass().getSimpleName(), "Maximum duration for a wheel spin event", ""+ maxScrollTime , "Seconds");
+		results[6] = new FeatureResult(getClass().getSimpleName(), "Minimum duration for a wheel spin event", ""+ minScrollTime , "Seconds");
 		
-		results[7] = new FeatureResult(getClass().getName(), "Average duration for a scroll up event", Util.format(avgScrollUpTime) , "Seconds");
-		results[8] = new FeatureResult(getClass().getName(), "Maximum duration for a scroll up event", ""+ maxScrollUpTime , "Seconds");
-		results[9] = new FeatureResult(getClass().getName(), "Minimum duration for a scroll down event", ""+ minScrollUpTime , "Seconds");
+		results[7] = new FeatureResult(getClass().getSimpleName(), "Average duration for a scroll up event", Util.format(avgScrollUpTime) , "Seconds");
+		results[8] = new FeatureResult(getClass().getSimpleName(), "Maximum duration for a scroll up event", ""+ maxScrollUpTime , "Seconds");
+		results[9] = new FeatureResult(getClass().getSimpleName(), "Minimum duration for a scroll down event", ""+ minScrollUpTime , "Seconds");
 		
-		results[10] = new FeatureResult(getClass().getName(), "Average duration for a scroll down event", Util.format(avgScrollDownTime) , "Seconds");
-		results[11] = new FeatureResult(getClass().getName(), "Maximum duration for a scroll down event", ""+ maxScrollDownTime , "Seconds");
-		results[12] = new FeatureResult(getClass().getName(), "Minimum duration for a scroll down event", ""+ minScrollDownTime, "Seconds");
+		results[10] = new FeatureResult(getClass().getSimpleName(), "Average duration for a scroll down event", Util.format(avgScrollDownTime) , "Seconds");
+		results[11] = new FeatureResult(getClass().getSimpleName(), "Maximum duration for a scroll down event", ""+ maxScrollDownTime , "Seconds");
+		results[12] = new FeatureResult(getClass().getSimpleName(), "Minimum duration for a scroll down event", ""+ minScrollDownTime, "Seconds");
 		
-		results[13] = new FeatureResult(getClass().getName(), "Average scrolled distance for a wheel spin event (both scroll up and down)", Util.format(avgScrollDist) , "Pixels");
-		results[14] = new FeatureResult(getClass().getName(), "Maximum scrolled distance for a wheel spin event (both scroll up and down)", ""+ maxScrollDist , "Pixels");
-		results[15] = new FeatureResult(getClass().getName(), "Minimum scrolled distance for a wheel spin event (both scroll up and down)", ""+ minScrollDist , "Pixels");
+		results[13] = new FeatureResult(getClass().getSimpleName(), "Average scrolled distance for a wheel spin event (both scroll up and down)", Util.format(avgScrollDist) , "Pixels");
+		results[14] = new FeatureResult(getClass().getSimpleName(), "Maximum scrolled distance for a wheel spin event (both scroll up and down)", ""+ maxScrollDist , "Pixels");
+		results[15] = new FeatureResult(getClass().getSimpleName(), "Minimum scrolled distance for a wheel spin event (both scroll up and down)", ""+ minScrollDist , "Pixels");
 		
-		results[16] = new FeatureResult(getClass().getName(), "Average scrolled distance for a scroll up event", Util.format(avgScrollUpDist) , "Pixels");
-		results[17] = new FeatureResult(getClass().getName(), "Maximum scrolled distance for a scroll up event", ""+ maxScrollUpDist , "Pixels");
-		results[18] = new FeatureResult(getClass().getName(), "Minimum scrolled distance for a scroll up event", ""+ minScrollUpDist , "Pixels");
+		results[16] = new FeatureResult(getClass().getSimpleName(), "Average scrolled distance for a scroll up event", Util.format(avgScrollUpDist) , "Pixels");
+		results[17] = new FeatureResult(getClass().getSimpleName(), "Maximum scrolled distance for a scroll up event", ""+ maxScrollUpDist , "Pixels");
+		results[18] = new FeatureResult(getClass().getSimpleName(), "Minimum scrolled distance for a scroll up event", ""+ minScrollUpDist , "Pixels");
 		
-		results[19] = new FeatureResult(getClass().getName(), "Average scrolled distance for a scroll down event", Util.format(avgScrollDownDist) , "Pixels");
-		results[20] = new FeatureResult(getClass().getName(), "Maximum scrolled distance for a scroll down event", ""+ maxScrollDownDist , "Pixels");
-		results[21] = new FeatureResult(getClass().getName(), "Minimum scrolled distance for a scroll down event", ""+ minScrollDownDist , "Pixels");
+		results[19] = new FeatureResult(getClass().getSimpleName(), "Average scrolled distance for a scroll down event", Util.format(avgScrollDownDist) , "Pixels");
+		results[20] = new FeatureResult(getClass().getSimpleName(), "Maximum scrolled distance for a scroll down event", ""+ maxScrollDownDist , "Pixels");
+		results[21] = new FeatureResult(getClass().getSimpleName(), "Minimum scrolled distance for a scroll down event", ""+ minScrollDownDist , "Pixels");
 		
-		results[22] = new FeatureResult(getClass().getName(), "Average speed of a wheel scroll event ", Util.format(avgScrollSpeed) , "Pixels Per Second");
-		results[23] = new FeatureResult(getClass().getName(), "Maximum speed of a wheel scroll event", Util.format(maxScrollSpeed) , "Pixels Per Second");
-		results[24] = new FeatureResult(getClass().getName(), "Minimum speed of a wheel scroll event ", Util.format(minScrollSpeed) , "Pixels Per Second");
+		results[22] = new FeatureResult(getClass().getSimpleName(), "Average speed of a wheel scroll event ", Util.format(avgScrollSpeed) , "Pixels Per Second");
+		results[23] = new FeatureResult(getClass().getSimpleName(), "Maximum speed of a wheel scroll event", Util.format(maxScrollSpeed) , "Pixels Per Second");
+		results[24] = new FeatureResult(getClass().getSimpleName(), "Minimum speed of a wheel scroll event ", Util.format(minScrollSpeed) , "Pixels Per Second");
 		
-		results[25] = new FeatureResult(getClass().getName(), "Average speed for a scroll up event", Util.format(avgScrollUpSpeed) , "Pixels Per Second");
-		results[26] = new FeatureResult(getClass().getName(), "Maximum speed for a scroll up event", Util.format(maxScrollUpSpeed) , "Pixels Per Second");
-		results[27] = new FeatureResult(getClass().getName(), "Minimum speed for a scroll up event", Util.format(minScrollUpSpeed) , "Pixels Per Second");
+		results[25] = new FeatureResult(getClass().getSimpleName(), "Average speed for a scroll up event", Util.format(avgScrollUpSpeed) , "Pixels Per Second");
+		results[26] = new FeatureResult(getClass().getSimpleName(), "Maximum speed for a scroll up event", Util.format(maxScrollUpSpeed) , "Pixels Per Second");
+		results[27] = new FeatureResult(getClass().getSimpleName(), "Minimum speed for a scroll up event", Util.format(minScrollUpSpeed) , "Pixels Per Second");
 		
-		results[28] = new FeatureResult(getClass().getName(), "Average speed for a scroll down event", Util.format(avgScrollDownSpeed) , "Pixels Per Second");
-		results[29] = new FeatureResult(getClass().getName(), "Maximum speed for a scroll down event", Util.format(maxScrollDownSpeed) , "Pixels Per Second");
-		results[30] = new FeatureResult(getClass().getName(), "Minimum speed for a scroll down event", Util.format(minScrollDownSpeed) , "Pixels Per Second");
+		results[28] = new FeatureResult(getClass().getSimpleName(), "Average speed for a scroll down event", Util.format(avgScrollDownSpeed) , "Pixels Per Second");
+		results[29] = new FeatureResult(getClass().getSimpleName(), "Maximum speed for a scroll down event", Util.format(maxScrollDownSpeed) , "Pixels Per Second");
+		results[30] = new FeatureResult(getClass().getSimpleName(), "Minimum speed for a scroll down event", Util.format(minScrollDownSpeed) , "Pixels Per Second");
 		return results;
 	}
 }

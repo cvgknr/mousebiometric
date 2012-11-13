@@ -15,28 +15,33 @@ import edu.pace.mouse.biometric.util.Util;
  * @author Venugopala C
  *
  */
-
+/**
+ * Implementation to extract all MouseClick related features.
+ */
 public class MouseClickFeatures implements Feature{
 	private long totalCount = 0;
 	private long leftCount = 0;
 	private long rightCount = 0;
 	private long doubleCount = 0;
-	/*private long leftMinutes = 0;
-	private long rightMinutes = 0;
-	private long doubleMinutes = 0;*/
-	private long leftMin = 0;
-	private long leftMax = 0;
-	private long leftAvg = 0;
-	private long rightMin = 0;
-	private long rightMax = 0;
-	private long rightAvg = 0;
-	private long doubleMin = 0;
-	private long doubleMax = 0;
-	private long doubleAvg = 0;
-	
-	
-	
+	private long leftTimeMin = 0;
+	private long leftTimeMax = 0;
+	private long leftTimeAvg = 0;
+	private long rightTimeMin = 0;
+	private long rightTimeMax = 0;
+	private long rightTimeAvg = 0;
+	private long doubleTimeMin = 0;
+	private long doubleTimeMax = 0;
+	private long doubleTimeAvg = 0;
 	private long totalSessionTimeMin = 0;
+	
+	private double perLeft = 0;
+	private double perRight = 0;
+	private double perDouble = 0;
+	private double avgClicks = 0;
+	private double avgLeft = 0;
+	private double avgRight = 0;
+	private double avgDouble = 0;
+
 	public MouseClickFeatures(MouseLogParser _parser){
 		ArrayList<MouseClick> mouseClicks;
 		ArrayList<MouseDoubleClick> mouseDoubleClicks;
@@ -44,50 +49,63 @@ public class MouseClickFeatures implements Feature{
 		mouseClicks = _parser.getMouseClicks();
 		mouseDoubleClicks = _parser.getMouseDoubleClicks();
 		mousePointers = _parser.getMousePointers();
-		
+		long duration;
 		for (MouseClick ele : mouseClicks) {
+			duration = ele.getMouseduration();
 			if ("left".equals(ele.getButton())){
 				leftCount++;
-				//leftMinutes += ele.getMouseduration();
-				if (ele.getMouseduration() < leftMin)
-					leftMin = ele.getMouseduration();
-				if (ele.getMouseduration() > leftMax)
-					leftMax = ele.getMouseduration();
-				leftAvg += ele.getMouseduration();
+				if (0 == leftTimeMin || duration < leftTimeMin)
+					leftTimeMin = duration;
+				
+				if (duration > leftTimeMax)
+					leftTimeMax = duration;
+				leftTimeAvg += duration;
 			}
 			else if ("right".equals(ele.getButton())){
 				rightCount++;
-				//rightMinutes += ele.getMouseduration();
-				if (ele.getMouseduration() < rightMin)
-					rightMin = ele.getMouseduration();
-				if (ele.getMouseduration() > rightMax)
-					rightMax = ele.getMouseduration();
-				rightAvg += ele.getMouseduration();
+				if (0 == rightTimeMin || duration < rightTimeMin)
+					rightTimeMin = duration;
+				
+				if (duration > rightTimeMax)
+					rightTimeMax = duration;
+				rightTimeAvg += duration;
 			}
 		}
+		//Total number of mouse clicks
+		totalCount = mouseClicks.size() + mouseDoubleClicks.size();
+		doubleCount = mouseDoubleClicks.size();
 		if (leftCount > 0)
-			leftAvg /= leftCount;
+			leftTimeAvg /= leftCount;
+		
 		if (rightCount > 0)
 			rightCount /= rightCount;
-		//leftMinutes /=60;
-		//rightMinutes/=60;
-		long duration;
+		
 		for (MouseDoubleClick ele :mouseDoubleClicks){
 			duration = ele.getFirstClick().getMouseduration() + ele.getSecondClick().getMouseduration();
-			//doubleMinutes += duration; 
-			if (duration < doubleMin)
-				doubleMin = duration;
-			if (duration > doubleMax)
-				doubleMax = duration;
-			doubleAvg += duration;
+			if (0 == doubleTimeMin || duration < doubleTimeMin)
+				doubleTimeMin = duration;
+			if (duration > doubleTimeMax)
+				doubleTimeMax = duration;
+			doubleTimeAvg += duration;
 		}
 		if (mouseDoubleClicks.size() > 0)
-			doubleAvg/= mouseDoubleClicks.size();
-		//doubleMin/=60;
-		totalCount = mouseClicks.size() + mouseDoubleClicks.size();
+			doubleTimeAvg/= mouseDoubleClicks.size();
 		if (mousePointers.size() > 0)
 			totalSessionTimeMin =  mousePointers.get(mousePointers.size()-1).getEndtime() - mousePointers.get(0).getStarttime();
 		totalSessionTimeMin /= 60;
+		
+		if (totalCount > 0){
+			perLeft = ((double)leftCount/totalCount*100);
+			perRight = ((double)rightCount/totalCount*100);
+			perDouble = ((double)doubleCount/totalCount*100);
+		}
+		if (totalSessionTimeMin > 0){
+			avgClicks = ((double)totalCount/totalSessionTimeMin);
+			avgLeft = ((double)leftCount/totalSessionTimeMin);
+			avgRight = ((double)rightCount/totalSessionTimeMin);
+			avgDouble = ((double)doubleCount/totalSessionTimeMin);
+		}
+			
 	}
 
 	/*
@@ -107,29 +125,32 @@ public class MouseClickFeatures implements Feature{
 	@Override
 	public FeatureResult[] extract() {
 		FeatureResult[] results = new FeatureResult[20];
-		results[0] = new FeatureResult(getClass().getName(), "Total Number of Mouse Clicks", ""+totalCount, "Click(s)");
-		results[1] = new FeatureResult(getClass().getName(), "Number of Left Mouse Clicks", ""+leftCount, "Click(s)");
-		results[2] = new FeatureResult(getClass().getName(), "Number of Right Mouse Clicks", ""+rightCount, "Click(s)");
-		results[3] = new FeatureResult(getClass().getName(), "Number of Double Mouse Clicks", ""+doubleCount, "Double Click(s)");
-		results[4] = new FeatureResult(getClass().getName(), "Percentage of Left Mouse Clicks", ""+Util.format(((double)leftCount/totalCount*100)), "Click(s)");
-		results[5] = new FeatureResult(getClass().getName(), "Percentage of Right Mouse Clicks", ""+Util.format(((double)rightCount/totalCount*100)), "Click(s)");
-		results[6] = new FeatureResult(getClass().getName(), "Percentage of Left Mouse Clicks", ""+Util.format(((double)doubleCount/totalCount*100)), "Click(s)");
-		results[7] = new FeatureResult(getClass().getName(), "Average number of Mouse Clicks per Minute", ""+ Util.format(((double)totalCount/totalSessionTimeMin*100)), "Click(s)/Minute");
-		results[8] = new FeatureResult(getClass().getName(), "Average number of Left Mouse Clicks per Minute", "" + Util.format(((double)leftCount/totalSessionTimeMin*100)), "Click(s)/Minute");
-		results[9] = new FeatureResult(getClass().getName(), "Average number of Right Mouse Clicks per Minute", "" + Util.format(((double)rightCount/totalSessionTimeMin*100)), "Click(s)/Minute");
-		results[10] = new FeatureResult(getClass().getName(), "Average number of Double Mouse Clicks per Minute", "" + Util.format(((double)doubleCount/totalSessionTimeMin*100)), "Click(s)/Minute");
+		results[0] = new FeatureResult(getClass().getSimpleName(), "Total Number of Mouse Clicks", ""+totalCount, "Click(s)");
 		
-		results[11] = new FeatureResult(getClass().getName(), "Maximum dwell of all left mouse click", ""+ leftMax , "Seconds");
-		results[12] = new FeatureResult(getClass().getName(), "Minimum dwell of all left mouse click", ""+ leftMax , "Seconds");
-		results[13] = new FeatureResult(getClass().getName(), "Average dwell of all left mouse click", ""+ leftAvg , "Seconds");
+		results[1] = new FeatureResult(getClass().getSimpleName(), "Number of Left Mouse Clicks", ""+leftCount, "Click(s)");
+		results[2] = new FeatureResult(getClass().getSimpleName(), "Number of Right Mouse Clicks", ""+rightCount, "Click(s)");
+		results[3] = new FeatureResult(getClass().getSimpleName(), "Number of Double Mouse Clicks", ""+doubleCount, "Double Click(s)");
+		
+		results[4] = new FeatureResult(getClass().getSimpleName(), "Percentage of Left Mouse Clicks", ""+Util.format(perLeft), "Click(s)");
+		results[5] = new FeatureResult(getClass().getSimpleName(), "Percentage of Right Mouse Clicks", ""+Util.format(perRight), "Click(s)");
+		results[6] = new FeatureResult(getClass().getSimpleName(), "Percentage of Double Mouse Clicks", ""+Util.format(perDouble), "Click(s)");
+		
+		results[7] = new FeatureResult(getClass().getSimpleName(), "Average number of Mouse Clicks per Minute", ""+ Util.format(avgClicks), "Click(s)/Minute");
+		results[8] = new FeatureResult(getClass().getSimpleName(), "Average number of Left Mouse Clicks per Minute", "" + Util.format(avgLeft), "Click(s)/Minute");
+		results[9] = new FeatureResult(getClass().getSimpleName(), "Average number of Right Mouse Clicks per Minute", "" + Util.format(avgRight), "Click(s)/Minute");
+		results[10] = new FeatureResult(getClass().getSimpleName(), "Average number of Double Mouse Clicks per Minute", "" + Util.format(avgDouble), "Click(s)/Minute");
+		
+		results[11] = new FeatureResult(getClass().getSimpleName(), "Maximum dwell of all left mouse click", ""+ leftTimeMax , "Seconds");
+		results[12] = new FeatureResult(getClass().getSimpleName(), "Minimum dwell of all left mouse click", ""+ leftTimeMin , "Seconds");
+		results[13] = new FeatureResult(getClass().getSimpleName(), "Average dwell of all left mouse click", ""+ leftTimeAvg , "Seconds");
 
-		results[14] = new FeatureResult(getClass().getName(), "Maximum dwell of all right mouse click", ""+ rightMax , "Seconds");
-		results[15] = new FeatureResult(getClass().getName(), "Minimum dwell of all right mouse click", ""+ rightMin , "Seconds");
-		results[16] = new FeatureResult(getClass().getName(), "Average dwell of all right mouse click", ""+ rightAvg , "Seconds");
+		results[14] = new FeatureResult(getClass().getSimpleName(), "Maximum dwell of all right mouse click", ""+ rightTimeMax , "Seconds");
+		results[15] = new FeatureResult(getClass().getSimpleName(), "Minimum dwell of all right mouse click", ""+ rightTimeMin , "Seconds");
+		results[16] = new FeatureResult(getClass().getSimpleName(), "Average dwell of all right mouse click", ""+ rightTimeAvg , "Seconds");
 
-		results[17] = new FeatureResult(getClass().getName(), "Maximum transition time of double click", ""+ doubleMax, "Seconds");
-		results[18] = new FeatureResult(getClass().getName(), "Minimum transition time of double click", ""+ doubleMin , "Seconds");
-		results[19] = new FeatureResult(getClass().getName(), "Average transition time of double click", ""+ doubleAvg , "Seconds");
+		results[17] = new FeatureResult(getClass().getSimpleName(), "Maximum transition time of double click", ""+ doubleTimeMax, "Seconds");
+		results[18] = new FeatureResult(getClass().getSimpleName(), "Minimum transition time of double click", ""+ doubleTimeMin , "Seconds");
+		results[19] = new FeatureResult(getClass().getSimpleName(), "Average transition time of double click", ""+ doubleTimeAvg , "Seconds");
 		return results;
 	}
 }
