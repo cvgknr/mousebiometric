@@ -2,6 +2,9 @@ package edu.pace.mouse.biometric.data;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import edu.pace.mouse.biometric.core.FeatureResult;
+import edu.pace.mouse.biometric.util.Util;
 /**
  * 
  * @author Venugopala C
@@ -123,6 +126,16 @@ public class MouseUserProfile {
 	public String getType() {
 		return type;
 	}
-
+	public FeatureResult[] extract(){
+		FeatureResult[] results = new FeatureResult[7];
+		results[0] = new FeatureResult(getClass().getSimpleName(), "Username", username, "");
+		results[1] = new FeatureResult(getClass().getSimpleName(), "Hand Click", handed, "");
+		results[2] = new FeatureResult(getClass().getSimpleName(), "Type of Mouse",type, "");
+		results[3] = new FeatureResult(getClass().getSimpleName(), "Age",age, "");
+		results[4] = new FeatureResult(getClass().getSimpleName(), "Gender",gender, "");
+		results[5] = new FeatureResult(getClass().getSimpleName(), "Computer",computer, "");
+		results[6] = new FeatureResult(getClass().getSimpleName(), "Keyboard",keyboard, "");
+		return results;
+	}
 
 }

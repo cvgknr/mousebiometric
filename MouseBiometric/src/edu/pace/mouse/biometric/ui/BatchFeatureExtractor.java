@@ -1,6 +1,8 @@
 package edu.pace.mouse.biometric.ui;
 import java.io.*;
 import java.lang.reflect.Constructor;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.swing.JLabel;
@@ -13,7 +15,7 @@ import edu.pace.mouse.biometric.core.FeatureResult;
 import edu.pace.mouse.biometric.data.MouseLogParser;
 import edu.pace.mouse.biometric.util.CSVWriter;
 public class BatchFeatureExtractor{
-	public BatchFeatureExtractor(String inFilePath, String outFilePath, JList filesList, JLabel outStatusLabel){
+	public BatchFeatureExtractor(String inFilePath, String outFilePath, JList filesList, JLabel outStatusLabel, JLabel outFileLabel){
 		// get the list of files
 		File inFolder = new File(inFilePath);
 		File[] inFilesList = inFolder.listFiles();
@@ -27,7 +29,12 @@ public class BatchFeatureExtractor{
 		filesList.repaint();
 		MouseLogParser parser;
 		boolean doneHead = false;
-		String filename = "mousebio.csv";
+		Date d = new Date();
+		SimpleDateFormat simple=new SimpleDateFormat("yyyyMMddHHmmssSSS");
+
+		String filename = "Mousebiometri-" + simple.format(new Date()).toString() + ".csv" ;
+		outFileLabel.setText("Output File: "+ filename);
+		outFileLabel.repaint();
 		File csvFile = new File(outFilePath, filename);
 		if (!csvFile.exists()){
 			CSVWriter w=new CSVWriter(outFilePath, filename);
@@ -56,6 +63,7 @@ public class BatchFeatureExtractor{
 	}
 	public static ArrayList<FeatureResult[]> extractFeaturesFrom(MouseLogParser parser) {
 		ArrayList<FeatureResult[]> fr=new ArrayList<FeatureResult[]>();
+		fr.add(parser.getUserProfile().extract());
 		try {
 			// want to dynamically 'load' feature set
 			//so we can add features without having to modify this code.
@@ -63,7 +71,6 @@ public class BatchFeatureExtractor{
 			Reflections reflections = new Reflections("edu.pace.mouse.biometric.features");
 			Set<Class<? extends Feature>> classes = reflections.getSubTypesOf(Feature.class);
 			Constructor constructor;
-			Feature f;
 			for (Class c : classes) {
 				constructor = c.getConstructor(new Class[] { MouseLogParser.class });
 				fr.add(((Feature) constructor.newInstance(parser)).extract());

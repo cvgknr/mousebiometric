@@ -13,13 +13,9 @@
 	
     <dirname property="mousebiometric.project.dir" file="${ant.file.plugin.builds}"/>
 
-	<target name="publish" depends="clean, compile">
-        <jar file="${mousebiometric.project.dir}/export/JIWAPSensor.jar">
-            <fileset dir="${mousebiometric.project.dir}/bin"/>
-            <!--<fileset dir="${export.dir}/src" />-->
-            <fileset dir=".">
-                <include name="${mousebiometric.project.dir}/eventTypeResources/"/>
-            </fileset>
+	<target name="jar" depends="clean, compile">
+        <jar file="${mousebiometric.project.dir}/export/MouseBiometric.jar" manifest="${mousebiometric.project.dir}/META-INF/MANIFEST.MF">
+            <fileset dir="${mousebiometric.project.dir}/export/bin"/>
         </jar>
 		<delete dir="${mousebiometric.project.dir}/export/bin"/>
 	</target>
@@ -40,9 +36,25 @@
 	            <fileset dir="src" includes="**/*.properties" />
 	        </copy>
 	</target>
-	
+	<!-- ================================= 
+          target: name              
+         ================================= -->
+    <target name="publish" depends="jar" description="description">
+        <zip destfile="${mousebiometric.project.dir}/export/MouseBiometric.zip">
+	            <fileset dir="${mousebiometric.project.dir}/export" includes="MouseBiometric.jar" />
+				<fileset dir="${mousebiometric.project.dir}">
+					<include name="lib/*"/>
+				</fileset>
+        </zip>
+    	<delete>
+			<fileset dir="${mousebiometric.project.dir}/export">
+			    <include name="MouseBiometric.jar"/>
+			</fileset>
+		</delete>
+    </target>
+
 	<target name="clean">
-	    <!--<delete dir="${mousebiometric.project.dir}/export"/> -->
+	    <delete dir="${mousebiometric.project.dir}/export"/>
     </target>
 	
 </project>

@@ -22,6 +22,7 @@ import javax.swing.WindowConstants;
 import edu.pace.mouse.biometric.core.FeatureResult;
 
 public class MouseBiometricInterface extends JFrame {
+	private static final long serialVersionUID = 1L;
 	private static final int WIDTH = 800;
 	private static final int HEIGHT = 500;
 	private JPanel basic =null;
@@ -33,9 +34,10 @@ public class MouseBiometricInterface extends JFrame {
 	private JTextField outPathTxtField;
 	private JPanel loadFilesPanel;
 	private JLabel outStatusLabel;
+	private JLabel outFileLabel;
 	private JButton exitBut;
 	private JButton extractBut;
-	private JList filesList;
+	private JList<String> filesList;
 
 
 	public MouseBiometricInterface() {
@@ -52,8 +54,8 @@ public class MouseBiometricInterface extends JFrame {
 		FilesPanelLayout.setColumns(1);
 		basic.setLayout(FilesPanelLayout);
 		getContentPane().add(basic);
-		basic.setBounds(0, 0, 250, 90);
-		basic.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
+		basic.setBounds(0, 0, 230, 80);
+		basic.setBorder(BorderFactory.createEmptyBorder(10,5,0,0));
 
 		inPathBut = new JButton("Input PKBS File location");
 		basic.add(inPathBut);
@@ -85,26 +87,42 @@ public class MouseBiometricInterface extends JFrame {
 		loadFilesPanelLayout.setColumns(1);
 		loadFilesPanel.setLayout(loadFilesPanelLayout);
 		getContentPane().add(loadFilesPanel);
-		loadFilesPanel.setBounds(250, 0, 348, 90);
-		loadFilesPanel.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
+		loadFilesPanel.setBounds(240, 0, 550, 80);
+		loadFilesPanel.setBorder(BorderFactory.createEmptyBorder(10, 5, 0, 0));
 
 		inPathTxtField = new JTextField();
 		loadFilesPanel.add(inPathTxtField);
-		inPathTxtField.setPreferredSize(new java.awt.Dimension(294, 31));
+		inPathTxtField.setPreferredSize(new java.awt.Dimension(350, 31));
 		
 		outPathTxtField = new JTextField();
 		loadFilesPanel.add(outPathTxtField);
-		outPathTxtField.setPreferredSize(new java.awt.Dimension(294, 31));
+		outPathTxtField.setPreferredSize(new java.awt.Dimension(350, 31));
 
-		filesList = new JList();
+		JLabel listLabel = new JLabel();
+		getContentPane().add(listLabel);
+		listLabel.setText("Input Files");
+		listLabel.setBounds(10, 80, (int) (WIDTH*0.3), 20);
+		listLabel.setFont(new Font(Font.SERIF, Font.BOLD, 18));				
+		listLabel.setForeground(new Color(25, 25, 112));
+
+		filesList = new JList<String>();
 		getContentPane().add(filesList);
 		filesList.setOpaque(true);
-		filesList.setBounds(5, 100,(int) (WIDTH*0.3), HEIGHT-200);
+		filesList.setBounds(10, 105,(int) (WIDTH*0.3), HEIGHT-200);
 		filesList.setFont(new Font(Font.SERIF, Font.BOLD, 12));
+		filesList.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
+
+		outFileLabel = new JLabel();
+		getContentPane().add(outFileLabel);
+		outFileLabel.setText("");
+		outFileLabel.setBounds((int) (WIDTH*0.3) +20, 80, 500, 20);
+		outFileLabel.setFont(new Font(Font.SERIF, Font.BOLD, 18));				
+		outFileLabel.setForeground(new Color(25, 25, 112));
 
 		outStatusLabel = new JLabel();
 		getContentPane().add(outStatusLabel);
-		outStatusLabel.setBounds(400, 120, 338, 20);
+		outStatusLabel.setText("");
+		outStatusLabel.setBounds((int) (WIDTH*0.3) +20, 120, 338, 20);
 		outStatusLabel.setFont(new Font(Font.SERIF, Font.BOLD, 18));				
 		outStatusLabel.setForeground(new Color(25, 25, 112));
 
@@ -135,19 +153,6 @@ public class MouseBiometricInterface extends JFrame {
 		this.setExtendedState(MAXIMIZED_BOTH - 50);//Forces the window to stay open, instead of minimizing
 		this.setTitle("Extract Mouse Biometric Features from KBS XML");
 	}
-	private String createFeatureResultString(ArrayList<FeatureResult[]> frs){
-		StringBuilder sb=new StringBuilder();
-		for(FeatureResult[] fr:frs){
-			for (int i = 0; i < fr.length; i++) {
-				sb.append(fr[i].getLabel()+":"+fr[i].getValue()+" "+fr[i].getUnit());
-				sb.append("<br/>");
-				
-			}
-		}
-		
-		return sb.toString();
-	}
-
 	private void inputPathButtonActionPerformed(ActionEvent evt) {
 		int returnVal = inFC.showDialog(MouseBiometricInterface.this,"Attach"); //changes the key log button to attach
 		if(returnVal == JFileChooser.APPROVE_OPTION){
@@ -188,7 +193,7 @@ public class MouseBiometricInterface extends JFrame {
 	
 	java.awt.EventQueue.invokeLater(new Runnable(){
 		public void run(){
-			BatchFeatureExtractor extractor = new BatchFeatureExtractor(inPathTxtField.getText(), outPathTxtField.getText(), filesList, outStatusLabel);
+			BatchFeatureExtractor extractor = new BatchFeatureExtractor(inPathTxtField.getText(), outPathTxtField.getText(), filesList, outStatusLabel, outFileLabel);
 		}
 	});
 	}
