@@ -49,7 +49,7 @@ public class CSVWriter extends File{
 		}
 		doWriteData(result);
 	}
-	 private void doWriteData(List<String> values) {
+	 public void doWriteData(List<String> values) {
 		 try {
 			int colCount=0;
 		 	String newline = System.getProperty("line.separator");

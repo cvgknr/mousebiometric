@@ -129,6 +129,8 @@ public class MouseUserProfile {
 	public FeatureResult[] extract(){
 		FeatureResult[] results = new FeatureResult[7];
 		results[0] = new FeatureResult(getClass().getSimpleName(), "Username", username, "");
+		results[0] = new FeatureResult(getClass().getSimpleName(), "Lastname", lastName, "");
+		results[0] = new FeatureResult(getClass().getSimpleName(), "Firstname", firstName, "");
 		results[1] = new FeatureResult(getClass().getSimpleName(), "Hand Click", handed, "");
 		results[2] = new FeatureResult(getClass().getSimpleName(), "Type of Mouse",type, "");
 		results[3] = new FeatureResult(getClass().getSimpleName(), "Age",age, "");

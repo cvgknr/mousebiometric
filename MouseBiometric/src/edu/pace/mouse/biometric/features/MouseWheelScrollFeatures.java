@@ -117,13 +117,18 @@ public class MouseWheelScrollFeatures implements Feature{
 				maxScrollSpeed = speed;		
 			
 		}
-		avgScrollTime = totalScrollTime/(double)totalScroll;
-		avgScrollUpTime /= scrollUp;
-		avgScrollDownTime /= scrollDown;
-		
-		avgScrollDist /= totalScroll;
-		avgScrollUpDist /= scrollUp;
-		avgScrollDownDist /= scrollDown;
+		if (avgScrollTime > 0){
+			avgScrollTime = totalScrollTime/(double)totalScroll;
+			avgScrollDist /= totalScroll;
+		}
+		if (scrollUp > 0){
+			avgScrollUpTime /= scrollUp;
+			avgScrollUpDist /= scrollUp;
+		}
+		if (scrollDown > 0){
+			avgScrollDownTime /= scrollDown;
+			avgScrollDownDist /= scrollDown;
+		}
 		
 	}
 
