@@ -7,13 +7,13 @@ import java.util.ArrayList;
  *
  */
 
-public class MouseMoveClickTrajectory extends MouseMoveTrajectory{
+public class MouseMoveClickTrajectory extends MouseTrajectory{
 	private MouseClick click;
 	public MouseMoveClickTrajectory(MousePointer mp,ArrayList<MouseMove> mm, MouseClick click ){
 		super(mp, mm);
 		this.click = click;
 	}
-	public MouseMoveClickTrajectory(MouseMoveTrajectory mmt, MouseClick click ){
+	public MouseMoveClickTrajectory(MouseTrajectory mmt, MouseClick click ){
 		super(mmt.getMousePointer(), mmt.getMouseMoves());
 		this.click = click;
 	}

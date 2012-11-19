@@ -8,10 +8,10 @@ import java.util.ArrayList;
  *
  */
 
-public class MouseMoveTrajectory {
+public class MouseTrajectory {
 	private MousePointer mousePointer;
 	private ArrayList<MouseMove> mouseMoves;
-	public MouseMoveTrajectory(MousePointer mp,ArrayList<MouseMove> mm ){
+	public MouseTrajectory(MousePointer mp,ArrayList<MouseMove> mm ){
 		this.mousePointer = mp;
 		this.mouseMoves = mm;
 	}

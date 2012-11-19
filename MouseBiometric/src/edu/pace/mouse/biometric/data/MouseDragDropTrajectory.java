@@ -10,13 +10,13 @@ import java.util.ArrayList;
 /**
  * Mouse Move Drag Drop Trajectory
  */
-public class MouseDragDropTrajectory  extends MouseMoveTrajectory{
+public class MouseDragDropTrajectory  extends MouseTrajectory{
 	private MouseClick click;
 	public MouseDragDropTrajectory(MousePointer mp, ArrayList<MouseMove> moves, MouseClick click ){
 		super(mp,moves);
 		this.click = click;
 	}
-	public MouseDragDropTrajectory(MouseMoveTrajectory mmt, MouseClick click ){
+	public MouseDragDropTrajectory(MouseTrajectory mmt, MouseClick click ){
 		super(mmt.getMousePointer(), mmt.getMouseMoves());
 		this.click = click;
 	}

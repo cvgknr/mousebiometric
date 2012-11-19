@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import edu.pace.mouse.biometric.core.Feature;
 import edu.pace.mouse.biometric.core.FeatureResult;
 import edu.pace.mouse.biometric.data.MouseLogParser;
-import edu.pace.mouse.biometric.data.MouseMoveTrajectory;
+import edu.pace.mouse.biometric.data.MouseTrajectory;
 import edu.pace.mouse.biometric.util.ComputStdMethodDouble;
 import edu.pace.mouse.biometric.util.ComputStdMethodLong;
 import edu.pace.mouse.biometric.util.Util;
 
 public class SystemWakeUpTrajectoryFeatures implements Feature{
-	private ArrayList<MouseMoveTrajectory> trajectories;
+	private ArrayList<MouseTrajectory> trajectories;
 	public SystemWakeUpTrajectoryFeatures(MouseLogParser parser){
 		trajectories = parser.getSystemWakeUpTranjectories();
 	}
@@ -30,7 +30,7 @@ public class SystemWakeUpTrajectoryFeatures implements Feature{
 		double []curviness = new double[trajectories.size()];
 		
 		int i =0;
-		for (MouseMoveTrajectory t : trajectories) {
+		for (MouseTrajectory t : trajectories) {
 			points[i] = t.getNumnerOfPoints();
 			time[i] = t.getTotalTime();
 			distance[i] = t.getDistance();

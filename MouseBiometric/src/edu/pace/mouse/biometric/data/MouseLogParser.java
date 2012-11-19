@@ -28,8 +28,8 @@ public class MouseLogParser {
 	private ArrayList<MousePointer> mousePointers = null;
 	private ArrayList<MouseDragDropTrajectory> mouseDragDrops= null;
 	private ArrayList<MouseWheelMove> mouseWheelMoves = null;
-	private ArrayList<MouseMoveTrajectory> mouseMoveTrajectories=null;
-	private ArrayList<MouseMoveTrajectory> sysWakeupTrajectories=null;
+	private ArrayList<MouseTrajectory> mouseMoveTrajectories=null;
+	private ArrayList<MouseTrajectory> sysWakeupTrajectories=null;
 	private ArrayList<MouseMoveClickTrajectory> moveClickTrajectories=null;
 	private MouseUserProfile userProfile= null;
 
@@ -97,7 +97,7 @@ public class MouseLogParser {
 			getMouseClicks();
 		return mouseDoubleClicks;
 	}
-	public ArrayList<MouseMove> getMouseMoves(){
+	private ArrayList<MouseMove> getMouseMoves(){
 		if (null == mouseMoves){
 			mouseMoves = new ArrayList<MouseMove>();
 			NodeList _list = dom.getElementsByTagName("mouseMoves");
@@ -152,23 +152,23 @@ public class MouseLogParser {
 		}
 		return tmm;
 	}
-	public ArrayList<MouseMoveTrajectory> getMouseMoveTrajectories(){
+	public ArrayList<MouseTrajectory> getMouseMoveTrajectories(){
 		if (null == mouseMoveTrajectories){
-			mouseMoveTrajectories = new ArrayList<MouseMoveTrajectory>(10);
+			mouseMoveTrajectories = new ArrayList<MouseTrajectory>(10);
 			ArrayList<MousePointer> mps = getMousePointers();
 			ArrayList<MouseMove> mms = getMouseMoves();
 			for (MousePointer mousePointer : mps) {
-				mouseMoveTrajectories.add(new MouseMoveTrajectory(mousePointer, getTrajectoryMoves(mousePointer, mms)));
+				mouseMoveTrajectories.add(new MouseTrajectory(mousePointer, getTrajectoryMoves(mousePointer, mms)));
 			}
 		}
 		return mouseMoveTrajectories;
 	}
-	private boolean isWakeup(MouseMoveTrajectory mmt, ArrayList<MouseClick> clicks){
+	private boolean isWakeup(MouseTrajectory mmt, ArrayList<MouseClick> clicks){
 		MousePointer mp = mmt.getMousePointer();
 		long starttime = mp.getStarttime();
 		long endtime = mp.getEndtime();
 		for (MouseClick mouseClick : clicks) {
-			if (starttime < mouseClick.getMousepresstime() && mouseClick.getMousereleasetime() < endtime)
+			if (starttime<= mouseClick.getMousepresstime() && mouseClick.getMousepresstime() <= endtime)
 				return false;
 		}
 		return true;
@@ -177,26 +177,19 @@ public class MouseLogParser {
 	 * 
 	 * @return return all System Wake up Mouse Move trajectories.
 	 */
-	public ArrayList<MouseMoveTrajectory> getSystemWakeUpTranjectories(){
-		if (null == sysWakeupTrajectories){
-			sysWakeupTrajectories = new ArrayList<MouseMoveTrajectory>(5);
-			ArrayList<MouseMoveTrajectory> mmts = getMouseMoveTrajectories();
-			ArrayList<MouseClick> clicks = getMouseClicks();
-			for (MouseMoveTrajectory mmt : mmts) {
-				if (isWakeup(mmt, clicks))
-					sysWakeupTrajectories.add(mmt);
-			}
-		}
+	public ArrayList<MouseTrajectory> getSystemWakeUpTranjectories(){
+		if (null == sysWakeupTrajectories)
+			processTrajectories();
 		return sysWakeupTrajectories;
 	}
-	private MouseClick isMoveClick(MouseMoveTrajectory mmt, ArrayList<MouseClick> clicks){
+	private MouseClick isMoveClick(MouseTrajectory mmt, ArrayList<MouseClick> clicks){
 		MousePointer mp = mmt.getMousePointer();
 		long starttime = mp.getStarttime();
 		long endtime = mp.getEndtime();
 		for (MouseClick mouseClick : clicks) {
-			if (starttime < mouseClick.getMousepresstime() && mouseClick.getMousereleasetime() < endtime)
-				return null;
-			if (starttime <mouseClick.getMousepresstime() && endtime <= mouseClick.getMousereleasetime())
+			if (starttime < mouseClick.getMousepresstime() && mouseClick.getMousepresstime() < endtime)
+				break;
+			if (endtime == mouseClick.getMousepresstime())
 				return mouseClick;
 		}
 		return null;
@@ -206,39 +199,45 @@ public class MouseLogParser {
 	 * @return return all System Wake up Mouse Move trajectories.
 	 */
 	public ArrayList<MouseMoveClickTrajectory> getMoveMoveAndClickTrajectory(){
-		if (null == moveClickTrajectories){
-			moveClickTrajectories = new ArrayList<MouseMoveClickTrajectory>(5);
-			ArrayList<MouseMoveTrajectory> mmts = getMouseMoveTrajectories();
-			ArrayList<MouseClick> clicks = getMouseClicks();
-			for (MouseMoveTrajectory mmt : mmts) {
-				MouseClick click = isMoveClick(mmt, clicks);
-				if (null != click)
-					moveClickTrajectories.add(new MouseMoveClickTrajectory(mmt, click));
-			}
-		}
+		if (null == moveClickTrajectories)
+			processTrajectories();
 		return moveClickTrajectories;
 	}
-	private MouseClick isDragDrop(MouseMoveTrajectory mmt,ArrayList<MouseClick> clicks){
+	private MouseClick isDragDrop(MouseTrajectory mmt,ArrayList<MouseClick> clicks){
 		ArrayList<MouseMove> mml = mmt.getMouseMoves();
 		MousePointer mp = mmt.getMousePointer();
 		long starttime = mp.getStarttime();
 		long endtime = mp.getEndtime();
 		for (MouseClick mouseClick : clicks) {
-			//TODO:  Need some more thinking on this
+			if (mouseClick.getMousepresstime() <= starttime && mouseClick.getMousereleasetime() >= endtime)
+				return mouseClick;
 		}
 		return null;
 	}
 	public ArrayList<MouseDragDropTrajectory> getMouseDragDropTrajectory(){
-		if (null == mouseDragDrops){
-			mouseDragDrops = new ArrayList<MouseDragDropTrajectory>(10);			
-			ArrayList<MouseMoveTrajectory> mmts = getMouseMoveTrajectories();
-			ArrayList<MouseClick> clicks = getMouseClicks();
-			for (MouseMoveTrajectory mmt : mmts) {
-				MouseClick click = isDragDrop(mmt, clicks);
+		if (null == mouseDragDrops)
+			processTrajectories();
+		return mouseDragDrops;
+	}
+	private void processTrajectories(){
+		moveClickTrajectories = new ArrayList<MouseMoveClickTrajectory>(5);
+		mouseDragDrops = new ArrayList<MouseDragDropTrajectory>(10);	
+		sysWakeupTrajectories = new ArrayList<MouseTrajectory>(5);
+		ArrayList<MouseTrajectory> mmts = getMouseMoveTrajectories();
+		ArrayList<MouseClick> clicks = getMouseClicks();
+		for (MouseTrajectory mmt : mmts) {
+			MouseClick click = isDragDrop(mmt, clicks);
+			if (null != click)
+				mouseDragDrops.add(new MouseDragDropTrajectory(mmt, click));
+			else{
+				click = isMoveClick(mmt, clicks);
 				if (null != click)
-					mouseDragDrops.add(new MouseDragDropTrajectory(mmt, click));
+					moveClickTrajectories.add(new MouseMoveClickTrajectory(mmt, click));
+				else if (isWakeup(mmt, clicks))
+					sysWakeupTrajectories.add(mmt);
+
 			}
 		}
-		return mouseDragDrops;
+		
 	}
 }
