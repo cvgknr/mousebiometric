@@ -1,49 +1,39 @@
 package unittest;
 
-import java.awt.Dimension;
 import java.util.ArrayList;
 
 import edu.pace.mouse.biometric.data.MouseClick;
 import edu.pace.mouse.biometric.data.MouseDoubleClick;
+import edu.pace.mouse.biometric.data.MouseDragDropTrajectory;
 import edu.pace.mouse.biometric.data.MouseLogParser;
-import edu.pace.mouse.biometric.data.MouseMove;
-import edu.pace.mouse.biometric.data.MousePointer;
-import edu.pace.mouse.biometric.data.MouseUserProfile;
+import edu.pace.mouse.biometric.data.MouseMoveClickTrajectory;
+import edu.pace.mouse.biometric.data.MouseTrajectory;
 
 
 public class TestFeature{
 	public static void main(String []args){
-		//MouseLogParser _mParser = new MouseLogParser("./test/python/NedBakelman_WordProcessor_001.xml");
-		MouseLogParser _mParser = new MouseLogParser("./logsamples/Venugopala3_Browser_001.xml");
-		MouseUserProfile _p = _mParser.getUserProfile();
-		_p.print();
-		/*ArrayList<MouseClick> mc = _mParser.getMouseClicks();
-		for (MouseClick mouseClick : mc) {
-			mouseClick.print();
+		//MouseLogParser _mParser = new MouseLogParser("./logsamples/sample/systemwakeup/VenugopalaChannarayappa_Browser_005.xml");
+		MouseLogParser _mParser = new MouseLogParser("./logsamples/RobertoXavier_Other_002.xml");
+		
+		ArrayList<MouseTrajectory> t = _mParser.getSystemWakeUpTranjectories();
+		for (MouseTrajectory mouseTrajectory : t) {
+			System.out.println("SW: " + mouseTrajectory.getMousePointer().getId());
 		}
-		ArrayList<MouseDoubleClick> mdc = _mParser.getMouseDoubleClicks();
-		for (MouseDoubleClick mouseDoubleClick : mdc) {
-			mouseDoubleClick.print();
+		System.out.println("SystemWakeUp Count: " + t.size());
+		ArrayList<MouseMoveClickTrajectory> mv = _mParser.getMoveMoveAndClickTrajectory();
+		for (MouseMoveClickTrajectory mouseMoveClickTrajectory : mv) {
+			System.out.println("MMC: " + mouseMoveClickTrajectory.getMousePointer().getId());
 		}
-		ArrayList<MouseMove> mm = _mParser.getMouseMoves();
-		for (MouseMove mouseMove : mm) {
-			mouseMove.print();
-		}*/
-		/*ArrayList<MousePointer> mp = _mParser.getMousePointers();
-		for (MousePointer mousePointer : mp) {
-			mousePointer.print();
-		}*/
-		//MouseMoveCurveAngle _mc = new MouseMoveCurveAngle(_mParser);
-		//_mc.extract();
-		/*ArrayList<MouseMoveCurve> curves = _mParser.getMouseCurves();
-		int i = 0;
-		for (MouseMoveCurve mouseMoveCurve : curves) {
-			System.out.println("Curve " + (++i) + " Points are: " + mouseMoveCurve.getPoints().size() );
+		System.out.println("Move and Click Count: " + mv.size());
+		ArrayList<MouseDragDropTrajectory> dd = _mParser.getMouseDragDropTrajectory();
+		for (MouseDragDropTrajectory mouseDragDropTrajectory : dd) {
+			System.out.println("DD: " + mouseDragDropTrajectory.getMousePointer().getId());
 		}
-		//DrawCurve c = new DrawCurve(curves.get(238));
-		DrawCurve c = new DrawCurve(curves);
-        c.setSize(new Dimension(1500,1200));
-        c.setVisible(true);*/
-
+		System.out.println("Drag and drop Count: " + dd.size());
+		ArrayList<MouseClick> mc = _mParser.getMouseClicks();
+		System.out.println("Click Count: " + mc.size());
+		
+		ArrayList<MouseDoubleClick> dc = _mParser.getMouseDoubleClicks();
+		System.out.println("Double Click Count: " + dc.size());
 	}
 }

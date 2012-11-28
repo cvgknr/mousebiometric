@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 
 import edu.pace.mouse.biometric.data.MouseMove;
-import edu.pace.mouse.biometric.data.MouseMoveTrajectory;
+import edu.pace.mouse.biometric.data.MouseTrajectory;
 import edu.pace.mouse.biometric.data.MousePointer;
 
 public class DrawTrajectory extends JFrame{
-	private MouseMoveTrajectory t = null;
-	private ArrayList<MouseMoveTrajectory> ts = null;
-	public DrawTrajectory(MouseMoveTrajectory t){
+	private MouseTrajectory t = null;
+	private ArrayList<MouseTrajectory> ts = null;
+	public DrawTrajectory(MouseTrajectory t){
 		this.t = t;
 		System.out.println("Started Draw Trajectory");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -25,7 +25,7 @@ public class DrawTrajectory extends JFrame{
 		setBackground(Color.blue);
 		setForeground(Color.red);
 	}
-	public DrawTrajectory(ArrayList<MouseMoveTrajectory> ts){
+	public DrawTrajectory(ArrayList<MouseTrajectory> ts){
 		this.ts = ts;
 		System.out.println("Started Draw Trajectory");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -36,7 +36,7 @@ public class DrawTrajectory extends JFrame{
 		setBackground(Color.blue);
 		setForeground(Color.red);
 	}
-	private void paintCurve(Graphics g,MouseMoveTrajectory t){
+	private void paintCurve(Graphics g,MouseTrajectory t){
 		ArrayList<MouseMove> points = t.getMouseMoves();
 		MousePointer p = t.getMousePointer();
 		g.drawString("(" +p.getXpix() + ", " + p.getYpix() + ")" , p.getXpix(), p.getYpix());
@@ -57,7 +57,7 @@ public class DrawTrajectory extends JFrame{
 		if (null != t)
 			paintCurve(g,t);
 		else
-			for (MouseMoveTrajectory tt : ts) {
+			for (MouseTrajectory tt : ts) {
 				paintCurve(g,tt);
 				
 			}
