@@ -157,8 +157,11 @@ public class MouseLogParser {
 			mouseMoveTrajectories = new ArrayList<MouseTrajectory>(10);
 			ArrayList<MousePointer> mps = getMousePointers();
 			ArrayList<MouseMove> mms = getMouseMoves();
+			ArrayList<MouseMove> mtm; 
 			for (MousePointer mousePointer : mps) {
-				mouseMoveTrajectories.add(new MouseTrajectory(mousePointer, getTrajectoryMoves(mousePointer, mms)));
+				mtm = getTrajectoryMoves(mousePointer, mms);
+				if (mtm.size() > 0)
+					mouseMoveTrajectories.add(new MouseTrajectory(mousePointer, mtm));
 			}
 		}
 		return mouseMoveTrajectories;

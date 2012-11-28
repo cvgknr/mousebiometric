@@ -92,7 +92,7 @@ public class MouseClickFeatures implements Feature{
 			doubleTimeAvg/= mouseDoubleClicks.size();
 		if (mousePointers.size() > 0)
 			totalSessionTimeMin =  mousePointers.get(mousePointers.size()-1).getEndtime() - mousePointers.get(0).getStarttime();
-		totalSessionTimeMin /= 100*60;
+		totalSessionTimeMin /= 1000*60;
 		
 		if (totalCount > 0){
 			perLeft = ((double)leftCount/totalCount*100);
