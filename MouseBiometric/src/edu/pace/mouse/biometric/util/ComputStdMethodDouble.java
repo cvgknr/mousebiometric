@@ -9,6 +9,10 @@ public class ComputStdMethodDouble{
 		if (null == v || 0 == v.length){
 			mean = median = stddev = 0;
 			min = max = 0;
+		}else 		if (1 == v.length){
+			mean = median = stddev = v[0];
+			min = max = v[0];
+
 		}else{
 			double sum = v[0],sqSum=0;
 			min =v[0];

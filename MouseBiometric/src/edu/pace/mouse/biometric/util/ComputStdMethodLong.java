@@ -9,6 +9,9 @@ public class ComputStdMethodLong{
 		if (null == v || 0 == v.length){
 			mean = median = stddev = 0;
 			min = max = 0;
+		}else if (1 == v.length){
+			mean = median = stddev = v[0];
+			min = max = v[0];
 		}else{
 			long sum = v[0],sqSum=0;
 			min = v[0];
@@ -28,9 +31,9 @@ public class ComputStdMethodLong{
 			stddev = Math.sqrt(sqSum/(double)(v.length));
 			Arrays.sort(v);
 			if (0 == (v.length % 2))
-				median = v[v.length/2];
+				median = v[(v.length/2) -1];
 			else{
-				int mid = v.length/2;
+				int mid = (v.length/2) - 1;
 				median = (v[mid] + v[mid+1])/2;
 			}
 		}
