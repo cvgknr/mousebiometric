@@ -160,8 +160,7 @@ public class MouseLogParser {
 			ArrayList<MouseMove> mtm; 
 			for (MousePointer mousePointer : mps) {
 				mtm = getTrajectoryMoves(mousePointer, mms);
-				if (mtm.size() > 0)
-					mouseMoveTrajectories.add(new MouseTrajectory(mousePointer, mtm));
+				mouseMoveTrajectories.add(new MouseTrajectory(mousePointer, mtm));
 			}
 		}
 		return mouseMoveTrajectories;
@@ -207,7 +206,6 @@ public class MouseLogParser {
 		return moveClickTrajectories;
 	}
 	private MouseClick isDragDrop(MouseTrajectory mmt,ArrayList<MouseClick> clicks){
-		ArrayList<MouseMove> mml = mmt.getMouseMoves();
 		MousePointer mp = mmt.getMousePointer();
 		long starttime = mp.getStarttime();
 		long endtime = mp.getEndtime();

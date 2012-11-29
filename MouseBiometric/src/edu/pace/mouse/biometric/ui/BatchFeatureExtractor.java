@@ -1,7 +1,6 @@
 package edu.pace.mouse.biometric.ui;
 import java.io.*;
 import java.lang.reflect.Constructor;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -15,7 +14,7 @@ import edu.pace.mouse.biometric.core.FeatureResult;
 import edu.pace.mouse.biometric.data.MouseLogParser;
 import edu.pace.mouse.biometric.util.CSVWriter;
 public class BatchFeatureExtractor{
-	public BatchFeatureExtractor(String inFilePath, String outFilePath, JList filesList, JLabel outStatusLabel, JLabel outFileLabel){
+	public BatchFeatureExtractor(String inFilePath, String outFilePath, JList<String> filesList, JLabel outStatusLabel, JLabel outFileLabel){
 		// get the list of files
 		File inFolder = new File(inFilePath);
 		File[] inFilesList = inFolder.listFiles();

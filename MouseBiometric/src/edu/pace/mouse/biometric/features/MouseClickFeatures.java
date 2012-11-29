@@ -23,16 +23,16 @@ public class MouseClickFeatures implements Feature{
 	private long leftCount = 0;
 	private long rightCount = 0;
 	private long doubleCount = 0;
-	private long leftTimeMin = 0;
-	private long leftTimeMax = 0;
-	private long leftTimeAvg = 0;
-	private long rightTimeMin = 0;
-	private long rightTimeMax = 0;
-	private long rightTimeAvg = 0;
-	private long doubleTimeMin = 0;
-	private long doubleTimeMax = 0;
-	private long doubleTimeAvg = 0;
-	private long totalSessionTimeMin = 0;
+	private double leftTimeMin = 0;
+	private double leftTimeMax = 0;
+	private double leftTimeAvg = 0;
+	private double rightTimeMin = 0;
+	private double rightTimeMax = 0;
+	private double rightTimeAvg = 0;
+	private double doubleTimeMin = 0;
+	private double doubleTimeMax = 0;
+	private double doubleTimeAvg = 0;
+	private double totalSessionTimeMin = 0;
 	
 	private double perLeft = 0;
 	private double perRight = 0;
@@ -92,7 +92,7 @@ public class MouseClickFeatures implements Feature{
 			doubleTimeAvg/= mouseDoubleClicks.size();
 		if (mousePointers.size() > 0)
 			totalSessionTimeMin =  mousePointers.get(mousePointers.size()-1).getEndtime() - mousePointers.get(0).getStarttime();
-		totalSessionTimeMin /= 1000*60;
+		totalSessionTimeMin /= 1000.0*60;
 		
 		if (totalCount > 0){
 			perLeft = ((double)leftCount/totalCount*100);
