@@ -6,7 +6,6 @@ import java.io.File;
 
 import edu.pace.mouse.biometric.data.MouseLogParser;
 import edu.pace.mouse.biometric.data.MouseUserProfile;
-import edu.pace.mouse.biometric.features.MouseMoveClickTrajectoryFeatures;
 import edu.pace.mouse.biometric.features.MouseWheelScrollFeatures;
 
 public class TestMouseWheelScrollFeatures extends BaseTest{

@@ -2,35 +2,21 @@ package unittest;
 
 
 import java.io.File;
-
-import edu.pace.mouse.biometric.core.FeatureResult;
 import edu.pace.mouse.biometric.data.MouseLogParser;
 import edu.pace.mouse.biometric.data.MouseUserProfile;
 import edu.pace.mouse.biometric.features.MouseDragDropFeatures;
 
-public class TestMouseDragDropFeatures{
-	public static void printFeatures(File file){
+public class TestMouseDragDropFeatures extends BaseTest{
+	public TestMouseDragDropFeatures(String path) {
+		super(path);
+	}
+
+	public void print(File file){
 		MouseLogParser parser = new MouseLogParser(file.getAbsolutePath());
 		MouseUserProfile _p = parser.getUserProfile();
 		System.out.println("File : " + file.getName());
 		_p.print();
 		MouseDragDropFeatures s = new MouseDragDropFeatures(parser);
-		FeatureResult []f = s.extract();
-		for (int i=0;i<f.length;i++){
-			if (null != f[i])
-				System.out.println(f[i].toString());
-		}
+		print(s.extract());
 	}
-	public static void main(String []args){
-		String inFolderPath = "C:\\Users\\Administrator\\git\\mouse\\MouseBiometric\\logsamples";
-		File inFolder = new File(inFolderPath);
-		if (inFolder.isDirectory()){
-			File[] inFilesList = inFolder.listFiles();
-			for(File file: inFilesList){
-				if (file.getName().endsWith(".xml"))
-					printFeatures(file);
-			}
-		}
-	}
-
 }
