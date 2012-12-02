@@ -20,7 +20,7 @@ public class TestFeature{
 			System.out.println("SW: " + mouseTrajectory.getMousePointer().getId());
 		}
 		System.out.println("SystemWakeUp Count: " + t.size());
-		ArrayList<MouseMoveClickTrajectory> mv = _mParser.getMoveMoveAndClickTrajectory();
+		ArrayList<MouseMoveClickTrajectory> mv = _mParser.getMouseMoveAndClickTrajectory();
 		for (MouseMoveClickTrajectory mouseMoveClickTrajectory : mv) {
 			System.out.println("MMC: " + mouseMoveClickTrajectory.getMousePointer().getId());
 		}
