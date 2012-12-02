@@ -97,7 +97,6 @@ public class BatchFeatureExtractor{
 			}
 			Constructor constructor;
 			for (int i = 0; i < classes.length; i++) {
-				System.out.println(classes[i].toString());
 				constructor = ((Class)classes[i]).getConstructor(new Class[] { MouseLogParser.class });
 				((Feature) constructor.newInstance(parser)).extract();
 				fr.addAll(((Feature) constructor.newInstance(parser)).extract());

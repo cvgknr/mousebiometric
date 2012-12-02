@@ -72,19 +72,19 @@ public class MouseMoveClickTrajectoryFeatures implements Feature{
 		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Length Standard Deviation", Util.format(dblresult.getStddev()), "Pixels"));
 
 		dblresult = new ComputStdMethodDouble(velocity);
-		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Velocity Mean", Util.format(dblresult.getMean()), "Pixels/Second"));
-		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Velocity Median", Util.format(dblresult.getMedian()), "Pixels/Second"));
-		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Velocity Minimum", Util.format(dblresult.getMin()), "Pixels/Second"));
-		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Velocity Maximum", Util.format(dblresult.getMax()), "Pixels/Second"));
-		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Velocity Standard Deviation", Util.format(dblresult.getStddev()), "Pixels/Second"));
+		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Velocity Mean", Util.format(dblresult.getMean()), "Pixels/Milliseconds"));
+		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Velocity Median", Util.format(dblresult.getMedian()), "Pixels/Milliseconds"));
+		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Velocity Minimum", Util.format(dblresult.getMin()), "Pixels/Milliseconds"));
+		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Velocity Maximum", Util.format(dblresult.getMax()), "Pixels/Milliseconds"));
+		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Velocity Standard Deviation", Util.format(dblresult.getStddev()), "Pixels/Milliseconds"));
 
 		
 		dblresult = new ComputStdMethodDouble(acceleration);
-		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Acceleration Mean", Util.format(dblresult.getMean()), "Pixels/Second"));
-		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Acceleration Median", Util.format(dblresult.getMedian()), "Pixels/Second"));
-		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Acceleration Minimum", Util.format(dblresult.getMin()), "Pixels/Second"));
-		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Acceleration Maximum", Util.format(dblresult.getMax()), "Pixels/Second"));
-		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Acceleration Standard Deviation", Util.format(dblresult.getStddev()), "Pixels/Second"));
+		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Acceleration Mean", Util.format(dblresult.getMean()), "Pixels/Milliseconds"));
+		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Acceleration Median", Util.format(dblresult.getMedian()), "Pixels/Milliseconds"));
+		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Acceleration Minimum", Util.format(dblresult.getMin()), "Pixels/Milliseconds"));
+		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Acceleration Maximum", Util.format(dblresult.getMax()), "Pixels/Milliseconds"));
+		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Acceleration Standard Deviation", Util.format(dblresult.getStddev()), "Pixels/Milliseconds"));
 		
 		dblresult = new ComputStdMethodDouble(directionangle);
 		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Direction Angle Mean", Util.format(dblresult.getMean()), "Degree"));
@@ -108,11 +108,11 @@ public class MouseMoveClickTrajectoryFeatures implements Feature{
 		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory Inflection Points Standard Deviation", Util.format(dblresult.getStddev()), "Points"));
 		
 		dblresult = new ComputStdMethodDouble(curviness);
-		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory curviness  Mean", Util.format(dblresult.getMean()), "Pixels/Second"));
-		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory curviness  Median", Util.format(dblresult.getMedian()), "Pixels/Second"));
-		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory curviness  Minimum", Util.format(dblresult.getMin()), "Pixels/Second"));
-		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory curviness  Maximum", Util.format(dblresult.getMax()), "Pixels/Second"));
-		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory curviness  Standard Deviation", Util.format(dblresult.getStddev()), "Pixels/Second"));
+		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory curviness  Mean", Util.format(dblresult.getMean()), "Pixels/Milliseconds"));
+		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory curviness  Median", Util.format(dblresult.getMedian()), "Pixels/Milliseconds"));
+		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory curviness  Minimum", Util.format(dblresult.getMin()), "Pixels/Milliseconds"));
+		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory curviness  Maximum", Util.format(dblresult.getMax()), "Pixels/Milliseconds"));
+		f.add(new FeatureResult(getClass().getSimpleName(), "Mouse Move and Click Trajectory curviness  Standard Deviation", Util.format(dblresult.getStddev()), "Pixels/Milliseconds"));
 		
 		return f;
 	}
