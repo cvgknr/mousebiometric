@@ -6,10 +6,10 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -18,8 +18,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
-
-import edu.pace.mouse.biometric.core.FeatureResult;
 
 public class MouseBiometricInterface extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -38,6 +36,7 @@ public class MouseBiometricInterface extends JFrame {
 	private JButton exitBut;
 	private JButton extractBut;
 	private JList<String> filesList;
+	private JCheckBox isView;
 
 
 	public MouseBiometricInterface() {
@@ -98,17 +97,22 @@ public class MouseBiometricInterface extends JFrame {
 		loadFilesPanel.add(outPathTxtField);
 		outPathTxtField.setPreferredSize(new java.awt.Dimension(350, 31));
 
+		isView = new JCheckBox("Generate Headers");
+		getContentPane().add(isView);
+		isView.setBounds(10, 80, 200, 20);
+
 		JLabel listLabel = new JLabel();
 		getContentPane().add(listLabel);
 		listLabel.setText("Input Files");
-		listLabel.setBounds(10, 80, (int) (WIDTH*0.3), 20);
+		listLabel.setBounds(10, 100, (int) (WIDTH*0.3), 20);
 		listLabel.setFont(new Font(Font.SERIF, Font.BOLD, 18));				
 		listLabel.setForeground(new Color(25, 25, 112));
+		
 
 		filesList = new JList<String>();
 		getContentPane().add(filesList);
 		filesList.setOpaque(true);
-		filesList.setBounds(10, 105,(int) (WIDTH*0.3), HEIGHT-200);
+		filesList.setBounds(10, 125,(int) (WIDTH*0.3), HEIGHT-200);
 		filesList.setFont(new Font(Font.SERIF, Font.BOLD, 12));
 		filesList.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
 
@@ -193,7 +197,7 @@ public class MouseBiometricInterface extends JFrame {
 	
 	java.awt.EventQueue.invokeLater(new Runnable(){
 		public void run(){
-			BatchFeatureExtractor extractor = new BatchFeatureExtractor(inPathTxtField.getText(), outPathTxtField.getText(), filesList, outStatusLabel, outFileLabel);
+			BatchFeatureExtractor extractor = new BatchFeatureExtractor(inPathTxtField.getText(), outPathTxtField.getText(), filesList, outStatusLabel, outFileLabel, !isView.isSelected());
 		}
 	});
 	}

@@ -14,7 +14,7 @@ import edu.pace.mouse.biometric.core.FeatureResult;
 import edu.pace.mouse.biometric.data.MouseLogParser;
 import edu.pace.mouse.biometric.util.CSVWriter;
 public class BatchFeatureExtractor{
-	public BatchFeatureExtractor(String inFilePath, String outFilePath, JList<String> filesList, JLabel outStatusLabel, JLabel outFileLabel){
+	public BatchFeatureExtractor(String inFilePath, String outFilePath, JList<String> filesList, JLabel outStatusLabel, JLabel outFileLabel, boolean doneHead){
 		// get the list of files
 		File inFolder = new File(inFilePath);
 		File[] inFilesList = inFolder.listFiles();
@@ -27,13 +27,13 @@ public class BatchFeatureExtractor{
 		filesList.setListData(flist);
 		filesList.repaint();
 		MouseLogParser parser;
-		boolean doneHead = false;
 		SimpleDateFormat simple=new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		Date d = new Date();
 		String filename = "Mousebiometri-" + simple.format(d).toString() + ".csv" ;
 		outFileLabel.setText("Output File: "+ filename);
 		outFileLabel.repaint();
 		File csvFile = new File(outFilePath, filename);
+		boolean isFilename = doneHead;
 		if (!csvFile.exists()){
 			CSVWriter w=new CSVWriter(outFilePath, filename);
 			List<String> l = new ArrayList<String>(1);
@@ -49,8 +49,10 @@ public class BatchFeatureExtractor{
 					outStatusLabel.setText("Processing File "+ filename);
 					outStatusLabel.repaint();
 					parser = new MouseLogParser(file.getPath());
-					ArrayList<FeatureResult[]> features=extractFeaturesFrom(parser);
-					features.add(0, new FeatureResult[]{new FeatureResult(getClass().getSimpleName(), "Filename", filename, "")});
+					ArrayList<FeatureResult> features=extractFeaturesFrom(parser);
+					features.add(4, new FeatureResult(getClass().getSimpleName(), "Field Count", ""+features.size(), ""));
+					if(!isFilename)
+						features.add(1, new FeatureResult(getClass().getSimpleName(), "Filename", filename, ""));
 					if(!doneHead){
 						w.writeHeaders(features);
 						doneHead = true;
@@ -67,9 +69,9 @@ public class BatchFeatureExtractor{
 		outStatusLabel.setText("Successful");
 		outStatusLabel.repaint();
 	}
-	public static ArrayList<FeatureResult[]> extractFeaturesFrom(MouseLogParser parser) {
-		ArrayList<FeatureResult[]> fr=new ArrayList<FeatureResult[]>();
-		fr.add(parser.getUserProfile().extract());
+	public static ArrayList<FeatureResult> extractFeaturesFrom(MouseLogParser parser) {
+		ArrayList<FeatureResult> fr=new ArrayList<FeatureResult>();
+		fr.addAll(parser.getUserProfile().extract());
 		try {
 			// want to dynamically 'load' feature set
 			//so we can add features without having to modify this code.
@@ -77,15 +79,14 @@ public class BatchFeatureExtractor{
 			Reflections reflections = new Reflections("edu.pace.mouse.biometric.features");
 			Set<Class<? extends Feature>> setclasses = reflections.getSubTypesOf(Feature.class);
 			Object []classes = (Object[])setclasses.toArray();
-			String t1, t2;
-			for(int i=0;i<classes.length;i++){
+			String t1;
+			for(int i=0;i<classes.length-1;i++){
 				int index = i; 
 				t1 = classes[i].toString();
-				for(int j=i+1;j<classes.length-1;j++){
-					t2 = classes[j].toString();
-					if (t1.compareTo(t2)>0){
+				for(int j=i+1;j<classes.length;j++){
+					if (t1.compareTo(classes[j].toString())>0){
 						index = j;
-						t1 = classes[index].toString();
+						t1 = classes[j].toString();
 					}
 				}
 				if (i != index){
@@ -96,13 +97,14 @@ public class BatchFeatureExtractor{
 			}
 			Constructor constructor;
 			for (int i = 0; i < classes.length; i++) {
+				System.out.println(classes[i].toString());
 				constructor = ((Class)classes[i]).getConstructor(new Class[] { MouseLogParser.class });
-				fr.add(((Feature) constructor.newInstance(parser)).extract());
+				((Feature) constructor.newInstance(parser)).extract();
+				fr.addAll(((Feature) constructor.newInstance(parser)).extract());
 			}
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
 		return fr;
 	}
-
 }

@@ -31,7 +31,7 @@ public class MoveDragDropTrajectoryFeatures implements Feature{
 		
 		int i =0;
 		for (MouseTrajectory t : trajectories) {
-			points[i] = t.getNumnerOfPoints();
+			points[i] = t.getNumberOfPoints();
 			time[i] = t.getTotalTime();
 			distance[i] = t.getDistance();
 			length[i] = t.getLength();
