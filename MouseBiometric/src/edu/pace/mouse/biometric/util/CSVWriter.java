@@ -31,21 +31,17 @@ public class CSVWriter extends File{
 		if (null != fout)
 			fout.close();
 	}
-	public void writeHeaders(ArrayList<FeatureResult[]> features){
+	public void writeHeaders(ArrayList<FeatureResult> features){
 		List<String> result=new ArrayList<String>();
-		for(FeatureResult[] f:features){
-			for (int i = 0; i < f.length; i++) {
-				result.add(f[i].getLabel());
-			}
+		for(FeatureResult f:features){
+			result.add(f.getLabel());
 		}
 		doWriteData(result);
 	}
-	public void writeValues(ArrayList<FeatureResult[]> features){
+	public void writeValues(ArrayList<FeatureResult> features){
 		List<String> result=new ArrayList<String>();
-		for(FeatureResult[] f:features){
-			for (int i = 0; i < f.length; i++) {
-				result.add(f[i].getValue());
-			}
+		for(FeatureResult f:features){
+			result.add(f.getValue());
 		}
 		doWriteData(result);
 	}
@@ -57,9 +53,7 @@ public class CSVWriter extends File{
 	            if (colCount > 0)
 	                writer.write(",");
 	            if (x != null) {
-	                writer.write("\"");
 	                writer.write(toCsvValue(x));
-	                writer.write("\"");
 	            }
 	            colCount++;
 	        }

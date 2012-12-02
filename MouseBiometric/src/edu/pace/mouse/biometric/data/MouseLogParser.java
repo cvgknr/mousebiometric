@@ -28,9 +28,9 @@ public class MouseLogParser {
 	private ArrayList<MousePointer> mousePointers = null;
 	private ArrayList<MouseDragDropTrajectory> mouseDragDrops= null;
 	private ArrayList<MouseWheelMove> mouseWheelMoves = null;
-	private ArrayList<MouseTrajectory> mouseMoveTrajectories=null;
 	private ArrayList<MouseTrajectory> sysWakeupTrajectories=null;
 	private ArrayList<MouseMoveClickTrajectory> moveClickTrajectories=null;
+	private ArrayList<MouseTrajectory> trajectories=null;
 	private MouseUserProfile userProfile= null;
 
 	public MouseLogParser(String _path){
@@ -47,6 +47,11 @@ public class MouseLogParser {
 			e.printStackTrace();
 		}
 	}
+	private boolean isDoubleClick(MouseClick first, MouseClick second){
+		if( (second.getMousereleasetime() - first.getMousepresstime())<=500)
+			return true;
+		return false;
+	}
 	public MouseUserProfile getUserProfile(){
 		if (null == userProfile){
 			NodeList _list = dom.getElementsByTagName("user");
@@ -55,11 +60,6 @@ public class MouseLogParser {
 			}
 		}
 		return userProfile;
-	}
-	private boolean isDoubleClick(MouseClick first, MouseClick second){
-		if( (second.getMousereleasetime() - first.getMousepresstime())<=500)
-			return true;
-		return false;
 	}
 	/**
 	 * Find all clicks (left, right) and double clicks.
@@ -97,18 +97,6 @@ public class MouseLogParser {
 			getMouseClicks();
 		return mouseDoubleClicks;
 	}
-	private ArrayList<MouseMove> getMouseMoves(){
-		if (null == mouseMoves){
-			mouseMoves = new ArrayList<MouseMove>();
-			NodeList _list = dom.getElementsByTagName("mouseMoves");
-			if (0 != _list.getLength()){
-				_list = _list.item(0).getChildNodes();
-				for (int i=0;i<_list.getLength();i++)
-					mouseMoves.add(new MouseMove(_list.item(i))); 
-			}
-		}
-		return mouseMoves;
-	}
 	public ArrayList<MousePointer> getMousePointers(){
 		if (null == mousePointers){
 			mousePointers = new ArrayList<MousePointer>(10);
@@ -133,40 +121,33 @@ public class MouseLogParser {
 		}
 		return mouseWheelMoves;
 	}
-	private ArrayList<MouseMove> getTrajectoryMoves(MousePointer mp,ArrayList<MouseMove> mms){
-		ArrayList<MouseMove> tmm = new ArrayList<MouseMove>(5);
-		boolean findStart = true;
-		long mpx = mp.getXpix(), mpy=mp.getXpix(), mpxfinal = mp.getXfinalpix(), mpyfinal = mp.getYfinalpix();
-		long mpstart = mp.getStarttime();
-		
-		for (MouseMove mouseMove : mms) {
-			if (findStart){
-				if (mouseMove.getXpix() == mpx && mouseMove.getYpix() == mpy && mouseMove.getStarttime() == mpstart){
-					findStart = false;
-				}else
-					continue;
+	public ArrayList<MouseMove> getMouseMoves(){
+		if (null == mouseMoves){
+			mouseMoves = new ArrayList<MouseMove>();
+			NodeList _list = dom.getElementsByTagName("mouseMoves");
+			if (0 != _list.getLength()){
+				_list = _list.item(0).getChildNodes();
+				for (int i=0;i<_list.getLength();i++)
+					mouseMoves.add(new MouseMove(_list.item(i))); 
 			}
-			tmm.add(mouseMove);
-			if (mouseMove.getXpix() == mpxfinal && mouseMove.getYpix() == mpyfinal)
+		}
+		return mouseMoves;
+	}
+	private ArrayList<MouseMove> getTrajectoryMoves(MousePointer mp){
+		ArrayList<MouseMove> tmm = new ArrayList<MouseMove>(5);
+		long starttime = mp.getStarttime();
+		long endtime = mp.getEndtime();
+		ArrayList<MouseMove> mms = getMouseMoves();
+		for (MouseMove mouseMove : mms) {
+			if (mouseMove.getStarttime()<starttime) continue;
+			if (mouseMove.getStarttime() <= endtime)
+				tmm.add(tmm.size(), mouseMove);
+			else
 				break;
 		}
 		return tmm;
 	}
-	public ArrayList<MouseTrajectory> getMouseMoveTrajectories(){
-		if (null == mouseMoveTrajectories){
-			mouseMoveTrajectories = new ArrayList<MouseTrajectory>(10);
-			ArrayList<MousePointer> mps = getMousePointers();
-			ArrayList<MouseMove> mms = getMouseMoves();
-			ArrayList<MouseMove> mtm; 
-			for (MousePointer mousePointer : mps) {
-				mtm = getTrajectoryMoves(mousePointer, mms);
-				mouseMoveTrajectories.add(new MouseTrajectory(mousePointer, mtm));
-			}
-		}
-		return mouseMoveTrajectories;
-	}
-	private boolean isWakeup(MouseTrajectory mmt, ArrayList<MouseClick> clicks){
-		MousePointer mp = mmt.getMousePointer();
+	private boolean isWakeup(MousePointer mp, ArrayList<MouseClick> clicks){
 		long starttime = mp.getStarttime();
 		long endtime = mp.getEndtime();
 		for (MouseClick mouseClick : clicks) {
@@ -175,17 +156,7 @@ public class MouseLogParser {
 		}
 		return true;
 	}
-	/**
-	 * 
-	 * @return return all System Wake up Mouse Move trajectories.
-	 */
-	public ArrayList<MouseTrajectory> getSystemWakeUpTranjectories(){
-		if (null == sysWakeupTrajectories)
-			processTrajectories();
-		return sysWakeupTrajectories;
-	}
-	private MouseClick isMoveClick(MouseTrajectory mmt, ArrayList<MouseClick> clicks){
-		MousePointer mp = mmt.getMousePointer();
+	private MouseClick isMoveClick(MousePointer mp, ArrayList<MouseClick> clicks){
 		long starttime = mp.getStarttime();
 		long endtime = mp.getEndtime();
 		for (MouseClick mouseClick : clicks) {
@@ -196,17 +167,7 @@ public class MouseLogParser {
 		}
 		return null;
 	}
-	/**
-	 * 
-	 * @return return all System Wake up Mouse Move trajectories.
-	 */
-	public ArrayList<MouseMoveClickTrajectory> getMoveMoveAndClickTrajectory(){
-		if (null == moveClickTrajectories)
-			processTrajectories();
-		return moveClickTrajectories;
-	}
-	private MouseClick isDragDrop(MouseTrajectory mmt,ArrayList<MouseClick> clicks){
-		MousePointer mp = mmt.getMousePointer();
+	private MouseClick isDragDrop(MousePointer mp, ArrayList<MouseClick> clicks){
 		long starttime = mp.getStarttime();
 		long endtime = mp.getEndtime();
 		for (MouseClick mouseClick : clicks) {
@@ -215,30 +176,72 @@ public class MouseLogParser {
 		}
 		return null;
 	}
+	private void processTrajectories(){
+		if(null == moveClickTrajectories){
+			moveClickTrajectories = new ArrayList<MouseMoveClickTrajectory>(5);
+			mouseDragDrops = new ArrayList<MouseDragDropTrajectory>(10);	
+			sysWakeupTrajectories = new ArrayList<MouseTrajectory>(5);
+			trajectories = new ArrayList<MouseTrajectory>(5);
+			ArrayList<MouseClick> clicks = getMouseClicks();
+			ArrayList<MousePointer> pointers = getMousePointers();
+			ArrayList<MouseMove> trajMoves = getMouseMoves();
+			MouseClick preClick = null;
+			for (MousePointer mp : pointers) {
+				trajMoves = getTrajectoryMoves(mp);
+				MouseClick click = isDragDrop(mp, clicks);
+				if (null != click){
+					//Check if the last trajectory is move click and click belongs to current drag and drop 
+					if (click == preClick){
+						MouseMoveClickTrajectory m = moveClickTrajectories.remove(moveClickTrajectories.size()-1);
+						trajectories.add(trajectories.size(), new MouseTrajectory(m.getMousePointer(),m.getMouseMoves()));
+					}
+					mouseDragDrops.add(new MouseDragDropTrajectory(mp, trajMoves, click));
+				}else{
+					click = isMoveClick(mp, clicks);
+					if (null != click){
+						moveClickTrajectories.add(moveClickTrajectories.size(), new MouseMoveClickTrajectory(mp, trajMoves, click));
+						preClick = click;
+					}else{
+						preClick = null;
+						if (isWakeup(mp, clicks))
+							sysWakeupTrajectories.add(sysWakeupTrajectories.size(), new MouseTrajectory(mp,trajMoves));
+						else
+							trajectories.add(trajectories.size(), new MouseTrajectory(mp,trajMoves));
+					}
+				}
+			}
+		}
+	}
+	/**
+	 * 
+	 * @return return all System Wake up Mouse Move trajectories.
+	 */
+	public ArrayList<MouseTrajectory> getSystemWakeUpTranjectories(){
+		if (null == sysWakeupTrajectories)
+			processTrajectories();
+		return sysWakeupTrajectories;
+	}
+	/**
+	 * 
+	 * @return return all System Wake up Mouse Move trajectories.
+	 */
+	public ArrayList<MouseMoveClickTrajectory> getMouseMoveAndClickTrajectory(){
+		if (null == moveClickTrajectories)
+			processTrajectories();
+		return moveClickTrajectories;
+	}
+	/**
+	 * 
+	 * @return all Mouse DragDrop Trajectories.
+	 */
 	public ArrayList<MouseDragDropTrajectory> getMouseDragDropTrajectory(){
 		if (null == mouseDragDrops)
 			processTrajectories();
 		return mouseDragDrops;
 	}
-	private void processTrajectories(){
-		moveClickTrajectories = new ArrayList<MouseMoveClickTrajectory>(5);
-		mouseDragDrops = new ArrayList<MouseDragDropTrajectory>(10);	
-		sysWakeupTrajectories = new ArrayList<MouseTrajectory>(5);
-		ArrayList<MouseTrajectory> mmts = getMouseMoveTrajectories();
-		ArrayList<MouseClick> clicks = getMouseClicks();
-		for (MouseTrajectory mmt : mmts) {
-			MouseClick click = isDragDrop(mmt, clicks);
-			if (null != click)
-				mouseDragDrops.add(new MouseDragDropTrajectory(mmt, click));
-			else{
-				click = isMoveClick(mmt, clicks);
-				if (null != click)
-					moveClickTrajectories.add(new MouseMoveClickTrajectory(mmt, click));
-				else if (isWakeup(mmt, clicks))
-					sysWakeupTrajectories.add(mmt);
-
-			}
-		}
-		
+	public ArrayList<MouseTrajectory> getOtherTrajectory(){
+		if (null == trajectories)
+			processTrajectories();
+		return trajectories;
 	}
 }

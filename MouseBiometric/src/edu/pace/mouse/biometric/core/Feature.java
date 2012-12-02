@@ -1,5 +1,7 @@
 package edu.pace.mouse.biometric.core;
 
+import java.util.ArrayList;
+
 public interface Feature {
-	public FeatureResult[] extract();
+	public ArrayList<FeatureResult> extract();
 }
