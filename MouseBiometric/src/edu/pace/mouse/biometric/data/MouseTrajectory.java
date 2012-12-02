@@ -18,45 +18,25 @@ public class MouseTrajectory {
 	public MousePointer getMousePointer() {
 		return mousePointer;
 	}
-
 	public ArrayList<MouseMove> getMouseMoves() {
 		return mouseMoves;
 	}
-	public long getNumnerOfPoints(){
-		return mouseMoves.size()+2;
+	public long getNumberOfPoints(){
+		long count = mouseMoves.size();
+		if (noSkipFirstPoint())
+			count++;
+		if (noSkipLastPoint())
+			count++;
+		return count;
 	}
 	public long getTotalTime(){
 		return mousePointer.getDuration();
 	}
 	
 	public double getDistance(){
-		/*double sum = 0;
-		long preX = mousePointer.getXpix();
-		long preY = mousePointer.getYpix();
-		for (MouseMove mouseMove : mouseMoves) {
-			sum += getDistance(preX, preY, mouseMove.getXpix(), mouseMove.getYpix());
-			preX = mouseMove.getXpix();
-			preY = mouseMove.getYpix();
-		}
-		sum += getDistance(preX, preY, mousePointer.getXfinalpix(), mousePointer.getYfinalpix());
-		sum /= getNumnerOfPoints()-1*/
 		return mousePointer.getDistancepix();
 	}
 	public double getLength(){
-		/*double sum = 0;
-		long preX = mousePointer.getXpix();
-		long preY = mousePointer.getYpix();
-		long x, y;
-		for (MouseMove mouseMove : mouseMoves) {
-			x = mouseMove.getXpix() - preX;
-			y = mouseMove.getYpix() - preY;
-			sum += Math.sqrt((double)(x * x + y * y));
-			preX = mouseMove.getXpix();
-			preY = mouseMove.getYpix();
-		}
-		x = mousePointer.getXfinalpix() - preX;
-		y = mousePointer.getYfinalpix() - preY;
-		sum += Math.sqrt((double)(x * x + y * y));*/
 		return mousePointer.getLengthpix();
 	}
 	private double get2PointVelocity(long x1, long y1, long x2, long y2, double time){
@@ -67,19 +47,37 @@ public class MouseTrajectory {
 			time = (double)1.0/40.0;
 		return sqrt / (double)time;
 	}
+	private boolean noSkipFirstPoint(){
+		return 	(0 == mouseMoves.size() || 
+					(mousePointer.getXpix() != mouseMoves.get(0).getXpix() || 
+					mousePointer.getYpix() != mouseMoves.get(0).getYpix() || 
+					mousePointer.getStarttime() != mouseMoves.get(0).getStarttime()));
+	}
+	private boolean noSkipLastPoint(){
+		if (0 == mouseMoves.size()) return true; 
+		int lastindex = mouseMoves.size()-1;
+		return (mousePointer.getXfinalpix() != mouseMoves.get(lastindex).getXpix() ||
+				mousePointer.getYfinalpix() != mouseMoves.get(lastindex).getYpix() ||
+				mousePointer.getEndtime() != mouseMoves.get(lastindex).getStarttime());
+	}
 	public double getVelocity(){
 		double sum = 0;
 		long preX = mousePointer.getXpix();
 		long preY = mousePointer.getYpix();
 		long preTime = mousePointer.getStarttime();
-		for (MouseMove mouseMove : mouseMoves) {
+		int index = noSkipFirstPoint()?0:1;
+		MouseMove mouseMove;
+		for (;index<mouseMoves.size();index++) {
+			 mouseMove = mouseMoves.get(index);
 			sum += get2PointVelocity(preX, preY, mouseMove.getXpix(), mouseMove.getYpix(), mouseMove.getStarttime() - preTime);
 			preX = mouseMove.getXpix();
 			preY = mouseMove.getYpix();
 			preTime = mouseMove.getStarttime();
 		}
-		sum += get2PointVelocity(preX, preY, mousePointer.getXfinalpix(), mousePointer.getYfinalpix(), mousePointer.getEndtime() - preTime);
-		sum /= (getNumnerOfPoints()-1);
+		if (noSkipLastPoint()){
+			sum += get2PointVelocity(preX, preY, mousePointer.getXfinalpix(), mousePointer.getYfinalpix(), mousePointer.getEndtime() - preTime);
+		}
+		sum /= (getNumberOfPoints()-1);
 		return sum;
 	}
 	public double getAcceleration(){
@@ -90,7 +88,10 @@ public class MouseTrajectory {
 		double preVelocity=0,v;
 		boolean isFirst = true;
 		if (0 == mouseMoves.size()) return 0;
-		for (MouseMove mouseMove : mouseMoves) {
+		int index = noSkipFirstPoint()?0:1;
+		MouseMove mouseMove;
+		for (;index<mouseMoves.size();index++) {
+			 mouseMove = mouseMoves.get(index);
 			v = get2PointVelocity(preX, preY, mouseMove.getXpix(), mouseMove.getYpix(), mouseMove.getStarttime() - preTime);
 			if (isFirst){
 				isFirst = false;
@@ -103,8 +104,10 @@ public class MouseTrajectory {
 			pre2Time = preTime;
 			preTime = mouseMove.getStarttime();
 		}
-		v = get2PointVelocity(preX, preY, mousePointer.getXfinalpix(), mousePointer.getYfinalpix(), mousePointer.getEndtime() - preTime);
-		sum += (preVelocity - v)/((mousePointer.getEndtime()-pre2Time)/2);
+		if (noSkipLastPoint()){
+			v = get2PointVelocity(preX, preY, mousePointer.getXfinalpix(), mousePointer.getYfinalpix(), mousePointer.getEndtime() - preTime);
+			sum += (preVelocity - v)/((mousePointer.getEndtime()-pre2Time)/2);
+		}
 		return sum/mouseMoves.size();
 	}
 	
@@ -132,13 +135,17 @@ public class MouseTrajectory {
 		double sum = 0;
 		long preX = mousePointer.getXpix();
 		long preY = mousePointer.getYpix();
-		for (MouseMove mouseMove : mouseMoves) {
+		int index = noSkipFirstPoint()?0:1;
+		MouseMove mouseMove;
+		for (;index<mouseMoves.size();index++) {
+			mouseMove = mouseMoves.get(index);
 			sum += get2PointDirectionAngle(preX, preY, mouseMove.getXpix(),mouseMove.getYpix());
 			preX = mouseMove.getXpix();
 			preY = mouseMove.getYpix();
 		}
-		sum += get2PointDirectionAngle(preX, preY, mousePointer.getXfinalpix(),mousePointer.getYfinalpix()); 
-		return sum /(getNumnerOfPoints()-1);
+		if (noSkipLastPoint())
+			sum += get2PointDirectionAngle(preX, preY, mousePointer.getXfinalpix(),mousePointer.getYfinalpix()); 
+		return sum /(getNumberOfPoints()-1);
 	}
 	public double getDirectionAngleChange(){
 		double sum = 0;
@@ -146,7 +153,10 @@ public class MouseTrajectory {
 		double preAngle=0,a,da;
 		boolean isFirst = true;
 		if (0 == mouseMoves.size()) return 0;
-		for (MouseMove mouseMove : mouseMoves) {
+		int index = noSkipFirstPoint()?0:1;
+		MouseMove mouseMove;
+		for (;index<mouseMoves.size();index++) {
+			mouseMove = mouseMoves.get(index);
 			a = get2PointDirectionAngle(preX, preY, mouseMove.getXpix(), mouseMove.getYpix());
 			if (isFirst){
 				isFirst = false;
@@ -161,12 +171,14 @@ public class MouseTrajectory {
 			preX = mouseMove.getXpix();
 			preY = mouseMove.getYpix();
 		}
-		a = get2PointDirectionAngle(preX, preY, mousePointer.getXfinalpix(), mousePointer.getYfinalpix());
-		da = preAngle - a;
-		if (da<-180)
-			sum += da+360;
-		else
-			sum += da-360;
+		if (noSkipLastPoint()){
+			a = get2PointDirectionAngle(preX, preY, mousePointer.getXfinalpix(), mousePointer.getYfinalpix());
+			da = preAngle - a;
+			if (da<-180)
+				sum += da+360;
+			else
+				sum += da-360;
+		}
 		return sum/mouseMoves.size();
 	}
 	public long getInflectionPoints(){
@@ -174,7 +186,10 @@ public class MouseTrajectory {
 		double newslope,slope=0;
 		boolean isFirst = true;
 		long inflectionpoints = 0;
-		for (MouseMove mouseMove : mouseMoves) {
+		int index = noSkipFirstPoint()?0:1;
+		MouseMove mouseMove;
+		for (;index<mouseMoves.size();index++) {
+			mouseMove = mouseMoves.get(index);
 			newslope = getSlope(x,y,mouseMove.getXpix(),mouseMove.getYpix());
 			if (isFirst)
 				isFirst = false;
@@ -184,15 +199,18 @@ public class MouseTrajectory {
 			x = mouseMove.getXpix();
 			y = mouseMove.getYpix();
 		}
-		newslope = getSlope(x,y,mousePointer.getXfinalpix(),mousePointer.getYfinalpix());
-		if(hasSignChanged(slope, newslope))
-			inflectionpoints++;
+		if (noSkipLastPoint()){
+			newslope = getSlope(x,y,mousePointer.getXfinalpix(),mousePointer.getYfinalpix());
+			if(hasSignChanged(slope, newslope))
+				inflectionpoints++;
+		}
 		return inflectionpoints;
 	}
 	public double getCurviness(){
-		if (0 == getDistance())
-			return getLength()/((double)1/40);
-		return getLength() / getDistance();
+		double distance = getDistance();
+		if (0 == distance)
+			distance = 1.0/40.0;
+		return getLength() / distance;
 	}
 	private double getSlope(long ax, long ay, long bx, long by){
 		double ydiff = ay - by;
