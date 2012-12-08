@@ -128,12 +128,12 @@ public class MouseUserProfile {
 		return type;
 	}
 	public ArrayList<FeatureResult> extract(){
-		ArrayList<FeatureResult> results = new ArrayList<FeatureResult>(4);
+		ArrayList<FeatureResult> results = new ArrayList<FeatureResult>(3);
 		//results[0] = new FeatureResult(getClass().getSimpleName(), "Username", username, "");
-		results.add(new FeatureResult(getClass().getSimpleName(), "Name", firstName + " " + lastName, ""));
+		results.add(new FeatureResult(getClass().getSimpleName(), "Name", firstName + " " + lastName +"/?/?", ""));
 		results.add(new FeatureResult(getClass().getSimpleName(), "None", "?", ""));
 		results.add(new FeatureResult(getClass().getSimpleName(), "None", "?", ""));
-		results.add(new FeatureResult(getClass().getSimpleName(), "None", "Blah.Blah Blah Blah Blah", ""));
+		//results.add(new FeatureResult(getClass().getSimpleName(), "None", "Blah.Blah Blah Blah Blah", ""));
 		
 		/*results[0] = new FeatureResult(getClass().getSimpleName(), "Firstname", firstName, "");
 		results[1] = new FeatureResult(getClass().getSimpleName(), "Hand Click", handed, "");

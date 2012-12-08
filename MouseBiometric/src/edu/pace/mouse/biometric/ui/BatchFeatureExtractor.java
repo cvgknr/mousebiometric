@@ -1,11 +1,9 @@
 package edu.pace.mouse.biometric.ui;
 import java.io.*;
 import java.lang.reflect.Constructor;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
-import javax.swing.JLabel;
-import javax.swing.JList;
+import javax.swing.JTextArea;
 
 import org.reflections.Reflections;
 
@@ -14,9 +12,19 @@ import edu.pace.mouse.biometric.core.FeatureResult;
 import edu.pace.mouse.biometric.data.MouseLogParser;
 import edu.pace.mouse.biometric.util.CSVWriter;
 public class BatchFeatureExtractor{
-	public BatchFeatureExtractor(String inFilePath, String outFilePath, JList<String> filesList, JLabel outStatusLabel, JLabel outFileLabel, boolean doneHead){
+	private String inFolderPath;
+	private String outFilePath;
+	private boolean doneHead;
+	private JTextArea processArea;
+	public BatchFeatureExtractor(String inFolderPath, String outFilePath, JTextArea pArea, boolean doneHead){
+		this.inFolderPath = inFolderPath;
+		this.outFilePath = outFilePath;
+		this.doneHead = doneHead;
+		this.processArea = pArea;
+	}
+	public void generateFeatures(){
 		// get the list of files
-		File inFolder = new File(inFilePath);
+		File inFolder = new File(inFolderPath);
 		File[] inFilesList = inFolder.listFiles();
 		String []flist = new String[inFilesList.length];
 		int count=0;
@@ -24,52 +32,44 @@ public class BatchFeatureExtractor{
 			if (file.getName().endsWith(".xml"))
 				flist[count++] = file.getName(); 
 		}
-		filesList.setListData(flist);
-		filesList.repaint();
 		MouseLogParser parser;
-		SimpleDateFormat simple=new SimpleDateFormat("yyyyMMddHHmmssSSS");
+		processArea.setText("Output File: "+ outFilePath);
+		processArea.repaint();
+		String filename;
+		CSVWriter w=new CSVWriter(outFilePath);
+		List<String> l = new ArrayList<String>(1);
 		Date d = new Date();
-		String filename = "Mousebiometri-" + simple.format(d).toString() + ".csv" ;
-		outFileLabel.setText("Output File: "+ filename);
-		outFileLabel.repaint();
-		File csvFile = new File(outFilePath, filename);
-		boolean isFilename = doneHead;
-		if (!csvFile.exists()){
-			CSVWriter w=new CSVWriter(outFilePath, filename);
-			List<String> l = new ArrayList<String>(1);
-			l.add("Mouse Movement biometric feature extraction data created on " +d.toString());
-			w.doWriteData(l);
-			l.remove(0);
-			l.add(""+count);
-			w.doWriteData(l);
-			
-			for(File file: inFilesList){
-				filename = file.getName();
-				if (filename.endsWith(".xml")){
-					outStatusLabel.setText("Processing File "+ filename);
-					outStatusLabel.repaint();
-					parser = new MouseLogParser(file.getPath());
-					ArrayList<FeatureResult> features=extractFeaturesFrom(parser);
-					features.add(4, new FeatureResult(getClass().getSimpleName(), "Field Count", ""+features.size(), ""));
-					if(!isFilename)
-						features.add(1, new FeatureResult(getClass().getSimpleName(), "Filename", filename, ""));
-					if(!doneHead){
-						w.writeHeaders(features);
-						doneHead = true;
-					}
-					w.writeValues(features);
+		l.add("Mouse biometric data, created " +d.toString());
+		w.doWriteData(l);
+		l.remove(0);
+		l.add(""+count);
+		w.doWriteData(l);
+		int i=0;
+		for(File file: inFilesList){
+			filename = file.getName();
+			if (filename.endsWith(".xml")){
+				processArea.append("\nProcessing File "+ file.getAbsolutePath());
+				processArea.repaint();
+				parser = new MouseLogParser(file.getPath());
+				ArrayList<FeatureResult> features=extractFeaturesFrom(parser);
+				features.add(3, new FeatureResult(getClass().getSimpleName(), "Filename", filename + " " + i++, ""));
+				features.add(4, new FeatureResult(getClass().getSimpleName(), "Field Count", ""+features.size(), ""));
+				if(!doneHead){
+					w.writeHeaders(features);
+					doneHead = true;
 				}
-			}
-			try {
-				w.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+				w.writeValues(features);
 			}
 		}
-		outStatusLabel.setText("Successful");
-		outStatusLabel.repaint();
+		try {
+			w.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		processArea.append("Successful");
+		processArea.repaint();
 	}
-	public static ArrayList<FeatureResult> extractFeaturesFrom(MouseLogParser parser) {
+	public ArrayList<FeatureResult> extractFeaturesFrom(MouseLogParser parser) {
 		ArrayList<FeatureResult> fr=new ArrayList<FeatureResult>();
 		fr.addAll(parser.getUserProfile().extract());
 		try {

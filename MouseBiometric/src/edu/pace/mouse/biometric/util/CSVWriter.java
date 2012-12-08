@@ -16,8 +16,8 @@ public class CSVWriter extends File{
 	private static final long serialVersionUID = 1L;
 	FileOutputStream fout=null;
     OutputStreamWriter writer = null;
-	public CSVWriter(String folder, String filename) {
-		super(folder,filename);
+	public CSVWriter(String filename) {
+		super(filename);
 		try {
 			fout = new FileOutputStream(this);
 			writer= new OutputStreamWriter(fout);
@@ -51,7 +51,7 @@ public class CSVWriter extends File{
 		 	String newline = System.getProperty("line.separator");
 	        for (String x:values) {
 	            if (colCount > 0)
-	                writer.write(",");
+	                writer.write(", ");
 	            if (x != null) {
 	                writer.write(toCsvValue(x));
 	            }
